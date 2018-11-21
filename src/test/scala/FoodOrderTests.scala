@@ -23,7 +23,7 @@ class FoodOrderTests extends WordSpec with Matchers with ScalatestRouteTest {
       contentType should ===(ContentTypes.`application/json`)
 
       // and we know what message we're expecting back:
-      entityAs[String] should ===("""{"status":"Approved"}""")
+      entityAs[String] should ===("""{"status":"Processing"}""")
     }
   }
 

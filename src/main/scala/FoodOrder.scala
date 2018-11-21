@@ -25,6 +25,8 @@ object FoodOrder {
     system.terminate()
   }
 
+  val meals = List("Ugali", "Rice", "beefStew", "beefFry", "Egusi", "PepperSoup")
+
   def route(implicit mat: Materializer) = {
     import Directives._
     import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
@@ -33,9 +35,13 @@ object FoodOrder {
     pathSingleSlash {
       post {
         entity(as[Order]) { order =>
-          complete {
-            processBrokerRequest(order)
-            OrderStatus("Approved")
+          if (meals.contains(order.name) && order.quantity > 0) {
+            complete {
+              processBrokerRequest(order)
+              OrderStatus("Processing")
+            }
+          } else {
+            complete(StatusCodes.BadRequest, OrderStatus("Invalid Request"))
           }
         }
       }
@@ -48,6 +54,7 @@ object FoodOrder {
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
 
+    var result = null
     val requestEntity = HttpEntity(MediaTypes.`application/json`,s"""{"name":"${order.name}","quantity":${order.quantity}}""")
     val httpRequest = HttpRequest(HttpMethods.POST,
       uri = "https://ether.at-labs.at-internal.com/order/request",
@@ -57,9 +64,10 @@ object FoodOrder {
 
     Http().singleRequest(httpRequest).onComplete {
       case util.Success(value) => value.entity.dataBytes.runFold(ByteString(""))(_ ++ _).foreach { body =>
-        println(body.utf8String)
+        system.log.debug(s"Meal: ${order.name}|Quantity:${order.quantity}|Response: ${body.utf8String}")
       }
-      case scala.util.Failure(exception) => println(exception.getMessage)
+      case scala.util.Failure(exception) =>
+        system.log.debug(s"Meal: ${order.name}|Quantity:${order.quantity}|Error: ${exception.getMessage}")
     }
 
   }
