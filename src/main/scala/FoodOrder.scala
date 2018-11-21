@@ -54,7 +54,6 @@ object FoodOrder {
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
 
-    var result = null
     val requestEntity = HttpEntity(MediaTypes.`application/json`,s"""{"name":"${order.name}","quantity":${order.quantity}}""")
     val httpRequest = HttpRequest(HttpMethods.POST,
       uri = "https://ether.at-labs.at-internal.com/order/request",
