@@ -1,15 +1,12 @@
-import Orderer.ProductOrder
-import akka.actor.{ActorRef, ActorSystem, Props}
-import akka.util.Timeout
 
 import scala.concurrent.ExecutionContext
+
+import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.util.Timeout
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import spray.json.DefaultJsonProtocol._
 import akka.pattern.ask
 
-import scala.util.{ Success}
 
 
 class RestApi(implicit  system : ActorSystem , timeout: Timeout) extends Routes{
@@ -39,10 +36,6 @@ trait Routes extends ProductApi with ProductMarshaller {
       }
     }
   }
-
-
-
-
 }
 
 trait ProductApi{
@@ -59,8 +52,4 @@ import Orderer._
   def getProduct(product : ProductOrder) = {
     (orderer ? product).mapTo[Response]
   }
-
-
-
-
 }
