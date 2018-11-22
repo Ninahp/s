@@ -1,5 +1,7 @@
-import scala.concurrent.duration._
+package com.africasTalking.elmer.core
+
 import scala.io.StdIn
+import scala.concurrent.duration._
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http

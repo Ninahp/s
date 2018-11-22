@@ -1,3 +1,5 @@
+package com.africasTalking.elmer.core
+
 import spray.json.DefaultJsonProtocol
 
 trait ProductMarshaller extends DefaultJsonProtocol{

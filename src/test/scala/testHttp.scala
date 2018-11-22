@@ -5,6 +5,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{FormData, HttpRequest, HttpResponse}
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
+import com.africasTalking.elmer.core.ATHttpClientResponse
 
 trait TestHttp {
   implicit protected val system: ActorSystem
