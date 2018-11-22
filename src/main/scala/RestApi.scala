@@ -7,6 +7,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import spray.json.DefaultJsonProtocol._
+import akka.pattern.ask
+
+import scala.util.{ Success}
 
 
 class RestApi(implicit  system : ActorSystem , timeout: Timeout) extends Routes{
@@ -14,7 +17,7 @@ class RestApi(implicit  system : ActorSystem , timeout: Timeout) extends Routes{
 
   override implicit def requestTimeOut: Timeout = timeout
 
-  override def createOrdererActor: ActorRef = system.actorOf(Props(new Orderer()))
+  override def createOrdererActor: ActorRef = system.actorOf(Props(new Orderer()),"orderer")
 
 }
 
@@ -27,8 +30,12 @@ trait Routes extends ProductApi with ProductMarshaller {
   private def buy  = path("buy"){
     post {
       entity(as[ProductOrder]){ prod =>
-        getProduct(prod)
-        complete("Thanks")
+         onSuccess(getProduct(prod))  {
+          case Accepted => complete("Request Accepted")
+          case Failure => complete("Request Failed")
+          case Delivered => complete("Request Delivered")
+        }
+
       }
     }
   }
@@ -50,7 +57,7 @@ import Orderer._
   lazy val orderer = createOrdererActor
 
   def getProduct(product : ProductOrder) = {
-    orderer ! product
+    (orderer ? product).mapTo[Response]
   }
 
 
