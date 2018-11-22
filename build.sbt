@@ -31,9 +31,9 @@ lazy val core = (project in file("core")).
       "org.scalatest"                 %% "scalatest"            % scalaTestVersion % Test,
       "com.typesafe.akka"             %% "akka-testkit"         % akkaVersion      % Test,
       "org.lz4"                       %  "lz4-java"             % "1.4.1"          % Test,
-      "org.json4s" %% "json4s-core" % "3.5.0",
-      "org.json4s" %% "json4s-jackson" % "3.5.0",
-      "de.heikoseeberger" %% "akka-http-json4s" % "1.11.0"
+      "org.json4s"                    %% "json4s-core"          % "3.5.0",
+      "org.json4s"                    %% "json4s-jackson"       % "3.5.0",
+      "de.heikoseeberger"             %% "akka-http-json4s"     % "1.11.0"
     
     )
   )

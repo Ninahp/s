@@ -38,7 +38,7 @@ class WebServiceSpec extends WordSpec
   implicit val routeTestTimeout = RouteTestTimeout(FiniteDuration(20, "seconds"))
 
   "ElmerWebService" should {
-    "return return a list of available foods (GET /food/fetch)" in {
+    "return a list of available foods (GET /food/fetch)" in {
       val request = HttpRequest(uri = "/food/fetch")
       request ~> routes ~> check {
         status should ===(StatusCodes.OK)

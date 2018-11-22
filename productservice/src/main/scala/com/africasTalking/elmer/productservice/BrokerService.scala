@@ -35,7 +35,7 @@ class BrokerService extends Actor
     with ActorLogging
     with ElmerJsonProtocol{
 
-  implicit val system = context.system
+  implicit val system                   = context.system
 
   implicit val materializer             = ActorMaterializer()
 
