@@ -47,7 +47,6 @@ object FoodOrder {
       }
     }
   }
-
   def processBrokerRequest(order: Order) = {
 
     implicit val system = ActorSystem("food-order")
