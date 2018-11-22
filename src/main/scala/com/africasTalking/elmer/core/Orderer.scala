@@ -27,10 +27,11 @@ class Orderer(implicit val system: ActorSystem) extends Actor
       val orig_sender = sender()
       Marshal(p).to[RequestEntity] onComplete {
         case Failure(ex) => log.error(ex.getMessage)
+
         case Success(ent) =>
           val request = HttpRequest(
             HttpMethods.POST,
-            Uri("https://ether.at-labs.at-internal.com/order/request"),
+            Uri(ElmerConfig.gateway),
             entity = ent
           )
           log.info("Contacting broker")
