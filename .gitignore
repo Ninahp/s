@@ -1,0 +1,13 @@
+target/
+*.class
+*.iml
+*.ipr
+*.iws
+.idea/*
+out
+*.class
+.idea
+*~
+target/**
+project/project/**
+project/target/**
