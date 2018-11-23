@@ -1,11 +1,15 @@
+import scala.concurrent.Future
+
 import akka.actor.{ActorSystem, Props}
 import akka.http.scaladsl.model._
 import akka.testkit.{ImplicitSender, TestKit}
-import com.africasTalking.elmer.core.Orderer
-import com.africasTalking.elmer.core.Orderer.{Accepted, Failure, ProductOrder, ProductResponse}
+
+import com.africasTalking.elmer.core.actors.Orderer.{Accepted, Failure, ProductOrder, ProductResponse}
+import com.africasTalking.elmer.core.actors.Orderer
+
 import org.scalatest.{WordSpec, WordSpecLike}
 
-import scala.concurrent.Future
+
 
 class OrderedSpec extends TestKit(ActorSystem("switch-test-service"))
   with WordSpecLike

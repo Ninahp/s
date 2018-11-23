@@ -1,6 +1,5 @@
-package com.africasTalking.elmer.core
+package com.africasTalking.elmer.core.Config
 
-import com.typesafe.config.{Config, ConfigFactory}
 import io.atlabs.horus.core.config.ATBaseConfigT
 
 trait ElmerConfigTrait extends ATBaseConfigT{

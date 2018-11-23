@@ -2,11 +2,15 @@ package com.africasTalking.elmer.core
 
 import scala.io.StdIn
 import scala.concurrent.duration._
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import io.atlabs.horus.core.config.ATBaseConfigT
+
+import com.africasTalking.elmer.core.Config.ElmerConfig
+import com.africasTalking.elmer.core.api.RestApi
+
 
 
 

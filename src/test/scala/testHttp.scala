@@ -1,11 +1,13 @@
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{FormData, HttpRequest, HttpResponse}
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import com.africasTalking.elmer.core.Orderer.ProductResponse
+
+import com.africasTalking.elmer.core.actors.Orderer.ProductResponse
 
 
 trait TestHttp {

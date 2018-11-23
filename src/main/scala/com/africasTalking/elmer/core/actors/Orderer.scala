@@ -1,17 +1,20 @@
-package com.africasTalking.elmer.core
+package com.africasTalking.elmer.core.actors
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
-import akka.actor.{ Actor, ActorLogging, ActorSystem }
+import akka.actor.{Actor, ActorLogging, ActorSystem}
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
-import com.africasTalking.elmer.core.Orderer._
+import com.africasTalking.elmer.core.Config.ElmerConfig
+import com.africasTalking.elmer.core.actors.Orderer._
+import com.africasTalking.elmer.core.marshalling.ProductMarshaller
+
 
 
 
