@@ -10,5 +10,4 @@ trait ElmerConfigTrait extends ATBaseConfigT{
   val gateway = config.getString("elmer.default-gateway")
 
 }
-
 object ElmerConfig extends ElmerConfigTrait
