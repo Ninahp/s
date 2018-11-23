@@ -1,4 +1,4 @@
-package com.africasTalking.elmer.core.api
+package com.africasTalking.elmer.web.api
 
 import scala.concurrent.ExecutionContext
 
@@ -8,8 +8,8 @@ import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.util.Timeout
 
-import com.africasTalking.elmer.core.actors.Orderer
-import com.africasTalking.elmer.core.marshalling.ProductMarshaller
+import com.africasTalking.elmer.web.actors.Orderer
+import com.africasTalking.elmer.web.marshalling.ProductMarshaller
 
 
 
@@ -33,7 +33,7 @@ trait Routes extends ProductApi with ProductMarshaller {
   private def buy  = path("buy"){
     post {
       entity(as[ProductOrder]){ prod =>
-         onSuccess(getProduct(prod))  {
+        onSuccess(getProduct(prod))  {
           case Accepted => complete("Request Accepted")
           case Failure => complete("Request Failed")
           case Delivered => complete("Request Delivered")
@@ -46,7 +46,7 @@ trait Routes extends ProductApi with ProductMarshaller {
 
 trait ProductApi{
 
-import Orderer._
+  import Orderer._
   implicit def executionContext : ExecutionContext
 
   implicit def requestTimeOut : Timeout

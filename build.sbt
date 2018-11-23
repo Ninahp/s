@@ -1,28 +1,66 @@
 val ATSnapshots = "AT Snapshots" at "https://deino.at-internal.com/repository/maven-snapshots/"
 val ATReleases  = "AT Releases"  at "https://deino.at-internal.com/repository/maven-releases/"
 
-name := "elmer"
-
-version := "0.1"
-
-scalaVersion := "2.12.6"
-
-resolvers    ++= Seq(
-  ATSnapshots,
-  ATReleases,
-  "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/",
-  "Confluent Maven Repository" at "http://packages.confluent.io/maven/"
-  
+lazy val sharedSettings = Seq(
+  scalaVersion := "2.12.6",
+  version := "0.1.6",
+  resolvers    ++= Seq(
+    ATSnapshots,
+    ATReleases,
+    "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/",
+    "Confluent Maven Repository" at "http://packages.confluent.io/maven/"
+  ),
+  scalacOptions ++= Seq(
+    "-deprecation",
+    "-feature",
+    "-unchecked"
+  ),
+  updateOptions := updateOptions.value.withLatestSnapshots(false),
+  test in assembly := {},
+  assemblyMergeStrategy in assembly := {
+    case "META-INF/io.netty.versions.properties" => MergeStrategy.first
+    case PathList("io", "netty", xs @ _*)        => MergeStrategy.last
+    case "logback.xml"                           => MergeStrategy.last
+    case x                                       =>
+      val oldStrategy = (assemblyMergeStrategy in assembly).value
+      oldStrategy(x)
+  }
 )
 
-libraryDependencies ++= Seq (
-  "com.typesafe.akka" %% "akka-actor"               % "2.5.17",
-  "com.typesafe.akka" %% "akka-slf4j"               % "2.5.17",
-  "com.typesafe.akka" %% "akka-http"                % "10.1.5",
-  "com.typesafe.akka" %% "akka-stream"              % "2.5.17",
-  "com.typesafe.akka" %% "akka-http-spray-json"     % "10.1.5",
-  "io.atlabs"         %% "horus-core"               % "0.1.4",
-  "com.typesafe.akka" %% "akka-testkit"             % "2.5.17"  % Test,
-  "org.scalatest"     %% "scalatest"                % "3.0.5"   % Test
 
+val akkaVersion      = "2.5.17"
+val akkaHttpVersion  = "10.1.5"
+val scalaTestVersion = "3.0.5"
+
+
+
+lazy val elmer = (project in file("."))
+  .aggregate(core, web)
+
+lazy val sharedDependencies = Seq(
+  "com.typesafe.akka" %% "akka-testkit" % akkaVersion      % Test,
+  "org.scalatest"     %% "scalatest"    % scalaTestVersion % Test
 )
+
+
+
+lazy val core = (project in file("core")).
+  settings(
+    sharedSettings,
+    libraryDependencies ++= sharedDependencies,
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka"      %% "akka-actor"           % akkaVersion,
+      "com.typesafe.akka"      %% "akka-slf4j"           % akkaVersion,
+      "com.typesafe.akka"      %% "akka-http"            % akkaHttpVersion,
+      "com.typesafe.akka"      %% "akka-http-spray-json" % akkaHttpVersion,
+      "io.atlabs"              %% "horus-core"           % "0.1.4"
+    )
+  )
+
+lazy val web = (project in file("web")).
+  settings(
+    sharedSettings,
+    libraryDependencies ++= sharedDependencies
+  ).dependsOn(core)
+
+

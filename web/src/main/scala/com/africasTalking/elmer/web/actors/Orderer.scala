@@ -1,4 +1,4 @@
-package com.africasTalking.elmer.core.actors
+package com.africasTalking.elmer.web.actors
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
@@ -11,9 +11,9 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 
-import com.africasTalking.elmer.core.Config.ElmerConfig
-import com.africasTalking.elmer.core.actors.Orderer._
-import com.africasTalking.elmer.core.marshalling.ProductMarshaller
+import com.africasTalking.elmer.web.actors.Orderer._
+import com.africasTalking.elmer.web.marshalling.ProductMarshaller
+import com.africasTalking.elmer.core.ElmerConfig
 
 
 
@@ -50,12 +50,12 @@ class Orderer(implicit val system: ActorSystem) extends Actor
 
                 case true =>
                   val rsp = resp.data.split("\"")
-                    rsp(3) match {
-                      case "Accepted"    => orig_sender ! Accepted
-                      case "Delivered"   => orig_sender ! Delivered
-                      case "Failure"     => orig_sender ! Orderer.Failure
-                      case other: String => log.info(other)
-                    }
+                  rsp(3) match {
+                    case "Accepted"    => orig_sender ! Accepted
+                    case "Delivered"   => orig_sender ! Delivered
+                    case "Failure"     => orig_sender ! Orderer.Failure
+                    case other: String => log.info(other)
+                  }
               }
           }
       }

@@ -1,4 +1,4 @@
-package com.africasTalking.elmer.core.Config
+package com.africasTalking.elmer.core
 
 import io.atlabs.horus.core.config.ATBaseConfigT
 
