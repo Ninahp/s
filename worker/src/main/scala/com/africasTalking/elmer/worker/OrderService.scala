@@ -50,11 +50,11 @@ class OrderService() extends Actor
 
   def receive = {
 
-    case p @ ProductOrder(_,_) =>
+    case req : ProductOrder =>
       log.info("Processing order")
       val currentSender = sender()
 
-      Marshal(p).to[RequestEntity] onComplete {
+      Marshal(req).to[RequestEntity] onComplete {
         case Failure(ex) => log.error(ex.getMessage)
 
         case Success(ent) =>
