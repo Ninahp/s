@@ -1,0 +1,16 @@
+*.class
+.idea
+target/
+
+# Temp files
+*~
+
+# Compile results
+target/**
+project/project/**
+project/target/**
+*pyc
+
+core/target/**
+gatewayservice/target/**
+web/target/**
