@@ -1,13 +1,16 @@
 package com.africasTalking.elmer.core
 
-import io.atlabs.horus.core.config.ATBaseConfigT
+import io.atlabs._
+import horus.core.config.ATBaseConfigT
+
+object ElmerConfig extends ElmerConfigTrait
 
 trait ElmerConfigTrait extends ATBaseConfigT{
-  //override val config: Config = ConfigFactory.load("application.conf")
 
   val host = config.getString("elmer.interface.web.host")
   val port = config.getInt("elmer.interface.web.port")
-  val gateway = config.getString("elmer.default-gateway")
+  val gateway = config.getString("elmer.broker-gateway")
+  val timeout = config.getString("elmer.http.timeout")
 
 }
-object ElmerConfig extends ElmerConfigTrait
+

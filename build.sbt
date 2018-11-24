@@ -57,15 +57,17 @@ lazy val core = (project in file("core")).
     )
   )
 
-lazy val web = (project in file("web")).
-  settings(
-    sharedSettings,
-    libraryDependencies ++= sharedDependencies
-  ).dependsOn(worker)
 
 lazy val worker = (project in file("worker")).
   settings(sharedSettings,
     libraryDependencies ++= sharedDependencies
   ).dependsOn(core)
+
+lazy val web = (project in file("web")).
+  settings(
+    sharedSettings,
+    libraryDependencies ++= sharedDependencies
+  ).dependsOn(core,worker)
+
 
 
