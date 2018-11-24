@@ -53,7 +53,7 @@ lazy val core = (project in file("core")).
       "com.typesafe.akka"      %% "akka-slf4j"           % akkaVersion,
       "com.typesafe.akka"      %% "akka-http"            % akkaHttpVersion,
       "com.typesafe.akka"      %% "akka-http-spray-json" % akkaHttpVersion,
-      "io.atlabs"              %% "horus-core"           % "0.1.4"
+      "io.atlabs"              %% "horus-core"           % "0.1.7"
     )
   )
 
