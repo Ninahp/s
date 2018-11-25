@@ -1,10 +1,10 @@
-package com.elmer.core
+package com.git elmer.core
 package util
 
 
 trait TestStringT {
 
-  private val foodItems = List("Managu","Mukimo","Matumbofry","Chapati","Pilau","Salad")
+  private val foodItems = List("Managu","Mukimo","MatumboFry","Chapati","Pilau","Salad")
 
   def checkStr(f:String):String = {
 
