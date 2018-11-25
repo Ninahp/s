@@ -6,9 +6,11 @@ import akka.io.IO
 import akka.stream.ActorMaterializer
 import akka.event.Logging
 
-import com.africasTalking._
+import io.atlabs._
 
-import elmer.core.util.{ ApplicationLifecycle }
+import horus.core.util.{ ApplicationLifecycle }
+
+import com.africasTalking._
 
 import elmer.core.config.ElmerConfig
 

@@ -15,6 +15,7 @@ use ctrl + C to stop
 
 Fetch available food
 http://localhost:8080/food/fetch GET
+returns a list of sample foods to be ordered
 
 Place Order
 http://localhost:8080/food/order POST

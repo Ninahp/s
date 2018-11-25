@@ -4,9 +4,14 @@ package config
 import collection.JavaConversions._
 import com.typesafe.config.ConfigFactory
 
+import io.atlabs._
+
+import horus.core.util.ATUtil
+
+import horus.core.config.ATBaseConfigT
+
 import com.africasTalking._
 
-import elmer.core.util.ATUtil
 
 object ElmerConfig extends ElmerConfig
 

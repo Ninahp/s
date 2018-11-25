@@ -1,8 +1,8 @@
 package com.africasTalking.elmer.web
 
-import com.africasTalking._
+import io.atlabs._
 
-import elmer.core.util.{ AbstractApplicationDaemon, ATApplicationT }
+import horus.core.util.{ AbstractApplicationDaemon, ATApplicationT }
 
 class ApplicationDaemon extends AbstractApplicationDaemon {
   def application = new Application

@@ -1,7 +1,6 @@
 package com.africasTalking.elmer.web
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.language.postfixOps
 import scala.util.{ Failure, Success }
 
 import akka.actor.ActorRefFactory
@@ -20,21 +19,20 @@ import elmer.core.config.ElmerConfig
 
 import elmer.core.query.QueryService
 
-import elmer.core.util._
+import elmer.food._
+
+import FoodOrderService._
+
+import elmer.web.marshalling._
 
 
-import elmer.productservice._
-
-import BrokerService._
-
-
-trait WebServiceT extends ElmerJsonProtocol {
+trait WebServiceT extends ElmerJsonSupportT {
 
   implicit def actorRefFactory: ActorRefFactory
 
   private val queryService                  = actorRefFactory.actorOf(Props[QueryService])
 
-  private val foodorderService              = actorRefFactory.actorOf(Props[BrokerService])
+  private val FoodOrderService              = actorRefFactory.actorOf(Props[FoodOrderService])
 
   implicit val timeout                      = Timeout(ElmerConfig.httpRequestTimeout)
 
@@ -43,8 +41,8 @@ trait WebServiceT extends ElmerJsonProtocol {
   lazy val route = {
     path("food" / "order") {
         post {
-          entity(as[FoodOrderService]) { order =>
-                complete((foodorderService ? PlaceOrder(order)
+          entity(as[FoodOrderServiceRequest]) { order =>
+                complete((FoodOrderService ? PlaceOrder(order)
             ).mapTo[FoodOrderServiceResponse])
           }
         }

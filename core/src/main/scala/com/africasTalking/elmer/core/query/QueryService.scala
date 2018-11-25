@@ -10,6 +10,12 @@ import akka.pattern.ask
 import akka.util.Timeout
 import akka.event.Logging
 
+import io.atlabs._
+
+import horus.core.config.ATConfig
+
+import horus.core.util.{ ATCash, ATCCPrinter, ATJsonProtocol, ATUtil }
+
 import com.africasTalking._
 
 import elmer.core.config.ElmerConfig
@@ -21,32 +27,16 @@ object QueryService {
 
   case class FoodFetchQueryServiceResponse(
     names: List[String]
-  )
+  )extends ATCCPrinter
 
-  case class FoodOrderService(
-    quantity: Int,
-    name: String
-  )
-
-  case class FoodOrderServiceResponse(
-    status: String,
-  )
-
-  case class Food(
-    foodId: Int,
-    name:String
-  )
 }
 
 class QueryService extends Actor
     with ActorLogging{
 
-
   implicit val actorSystem              = context.system
 
   implicit val timeout                  = Timeout(ElmerConfig.queryTimeout)
-
-  override lazy val log                 = Logging(actorSystem, classOf[QueryService])
 
   import QueryService._
 
