@@ -9,15 +9,10 @@ import io.atlabs._
 import horus.core.config.ATBaseConfigT
 import horus.core.util.ATUtil
 
-// Extend horus.core.config.ATBaseConfigT
-object ElmerConfig extends ElmerConfig
+object ElmerConfig extends ElmerConfigT
 
-private[config] trait ElmerConfig {
-
-  val config = ConfigFactory.load
-  config.checkValid(ConfigFactory.defaultReference)
-
-
+private[config] trait ElmerConfigT extends ATBaseConfigT {
+	
   // Broker
   val brokerUrl           = config.getString("elmer.broker.url")
   
