@@ -1,37 +1,43 @@
 package com.africasTalking.elmer
 package worker
 
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{ Actor, ActorLogging }
 import akka.http.scaladsl.marshalling.Marshal
-import akka.http.scaladsl.model.{HttpMethods, HttpRequest, MessageEntity}
+import akka.http.scaladsl.model.{ HttpMethods, HttpRequest, MessageEntity }
 
-import io.atlabs.horus.core.http.client.ATHttpClientT
+import io.atlabs._
 
-import spray.json._
+import horus.core.http.client.ATHttpClientT
+import horus.core.util.ATCCPrinter
+import horus.core.snoop.SnoopErrorPublisherT
 
-import com.africasTalking.elmer.core.config.ElmerConfig
+import com.africasTalking._
+
+import elmer.core.util.ElmerEnum.Status
+import elmer.core.config.ElmerConfig
 
 
 object FoodRequestGateway {
-  case class IncomingFoodServiceRequest(name:String,quantity:Int)
-  case class IncomingFoodServiceResponse(status:String, description: String)
+  case class FoodGatewayRequest(name:String, quantity:Int) extends ATCCPrinter
+  case class FoodGatewayResponse(status: Status.Value, description: String) extends ATCCPrinter
 }
 
 class FoodRequestGateway extends Actor
   with ActorLogging
   with ATHttpClientT
-  with GatewayJsonSupportT {
-
-  import FoodRequestGateway._
+  with GatewayJsonSupportT
+  with SnoopErrorPublisherT {
 
   implicit val system = context.system
   val gatewayUrl      = ElmerConfig.gatewayUrl
 
+  import FoodRequestGateway._
+
   override def receive: Receive = {
-    case req: IncomingFoodServiceRequest =>
+    case req: FoodGatewayRequest =>
       val currentSender   = sender()
 
       log.info(s"Processing $req")
@@ -53,16 +59,17 @@ class FoodRequestGateway extends Actor
         case Success(response) =>
           response.status.isSuccess match{
             case true   =>
-              val res = response.data.parseJson.convertTo[GatewayResponse]
-              currentSender ! IncomingFoodServiceResponse(res.status,"Request Accepted")
+              //val res = response.data.parseJson.convertTo[GatewayResponse]
+              currentSender ! FoodGatewayResponse(Status.Accepted, "Request Accepted")
 
             case false  =>
               log.warning(s"Processing $requestFut wasn't successful: ${response.status}")
-              currentSender ! IncomingFoodServiceResponse("Bad Request","Content was malformed")
+              currentSender ! FoodGatewayResponse(Status.BadRequest, "Content was malformed")
           }
 
         case Failure(exception) =>
-          log.error(s"Error in Sending request $requestFut: $exception")
+          publishError(s"Error in Sending request $requestFut: $exception")
+          currentSender ! FoodGatewayResponse(Status.InternalError, "There was an internal error. Please try again")
       }
   }
 }

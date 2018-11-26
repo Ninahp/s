@@ -1,37 +1,43 @@
 package com.africasTalking.elmer
 package worker
 
+import scala.concurrent.duration._
 
-import akka.actor.{ActorSystem, Props}
-import akka.testkit.{ImplicitSender, TestKit, TestProbe}
+import akka.actor.{ActorRef, Props}
+import akka.testkit.TestProbe
 
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import com.africasTalking._
 
-import com.africasTalking.elmer._
-import worker.FoodRequestGateway.IncomingFoodServiceResponse
-import worker.FoodRequestService._
+import elmer.core.util.ElmerEnum.Status
+
+import elmer.worker.FoodRequestGateway._
+import elmer.worker.FoodRequestService._
 
 
-class FoodRequestServiceSpec extends TestKit(ActorSystem("MyTestSystem"))
-  with ImplicitSender
-  with WordSpecLike
-  with Matchers
-  with BeforeAndAfterAll {
+class FoodRequestServiceSpec extends FoodRequestBaseTestConfigT {
 
   val foodRequestGatewayProbe = TestProbe()
-  val gatewayService          = system.actorOf(Props[FoodRequestService])
+
+  val foodRequestService          = system.actorOf(Props(new FoodRequestService {
+    override def createRequestGateway: ActorRef = foodRequestGatewayProbe.ref
+  }))
+
   val validRequest            = FoodServiceRequest (name = "ugaLi", quantity = 1)
   val invalidRequest          = FoodServiceRequest (name = "Spaghetti", quantity = 4)
 
   "Food Request Service" must {
-    "Accept valid requests and format it properly to send to the gateway" in {
-      gatewayService ! validRequest
-      expectMsg(IncomingFoodServiceResponse("Accepted","Request Accepted"))
+    "Return a BadRequest if FoodName is invalid" in {
+      foodRequestService ! invalidRequest
+      expectMsg(FoodGatewayResponse(Status.BadRequest, "Content was malformed"))
+      foodRequestGatewayProbe.expectNoMessage(100 millis)
+      expectNoMessage(100 millis)
     }
 
-    "Reject invalid requests and return an informative response" in {
-      gatewayService ! invalidRequest
-      expectMsg(IncomingFoodServiceResponse("Bad Request", "Content was malformed"))
+    "Return a Accepted if FoodName is valid" in {
+      foodRequestService ! validRequest
+      foodRequestGatewayProbe.expectMsg(FoodGatewayRequest("Ugali",1))
+      foodRequestGatewayProbe.reply(FoodGatewayResponse(Status.Accepted,"Request Accepted"))
+      expectMsg(FoodGatewayResponse(Status.Accepted,"Request Accepted"))
     }
   }
 

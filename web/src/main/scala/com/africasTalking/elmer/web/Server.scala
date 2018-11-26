@@ -1,7 +1,9 @@
 package com.africasTalking.elmer
 package web
 
-import io.atlabs.horus.core.util.{ATApplicationT, AbstractApplicationDaemon}
+import io.atlabs._
+
+import horus.core.util.{ ATApplicationT, AbstractApplicationDaemon }
 
 
 class ApplicationDaemon extends AbstractApplicationDaemon {

@@ -4,8 +4,16 @@ package util
 
 trait StringComplianceServiceT {
 
-  //Endpoint were we can retrieve this info
-  private val possibleValues = List("Ugali","Rice","beefStew","beefFry","Egusi","PepperSoup")
+  import ElmerEnum._
+
+  private val possibleValues = List(
+    FoodEnum.Ugali.toString,
+    FoodEnum.beefFry.toString,
+    FoodEnum.beefStew.toString,
+    FoodEnum.Egusi.toString,
+    FoodEnum.PepperSoup.toString,
+    FoodEnum.Rice.toString
+  )
 
   def checkString(x:String):String   = {
     val smallList = possibleValues.map(_.toLowerCase)

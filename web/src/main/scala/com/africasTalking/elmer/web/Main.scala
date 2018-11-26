@@ -5,9 +5,13 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
 
-import io.atlabs.horus.core.util.{ATLogT, ApplicationLifecycle}
+import io.atlabs._
 
-import com.africasTalking.elmer.core.config.ElmerConfig
+import horus.core.util.{ ATLogT, ApplicationLifecycle }
+
+import com.africasTalking._
+
+import elmer.core.config.ElmerConfig
 
 
 class Application extends ApplicationLifecycle with ATLogT {

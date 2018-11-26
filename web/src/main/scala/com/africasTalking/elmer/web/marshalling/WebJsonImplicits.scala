@@ -1,18 +1,21 @@
 package com.africasTalking.elmer.web
 package marshalling
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import akka.http.scaladsl.marshallers.sprayjson._
 
 import spray.json.DefaultJsonProtocol
 
-import com.africasTalking.elmer.worker._
-import FoodRequestGateway._
-import FoodRequestService._
+import com.africasTalking._
+
+import elmer.worker.FoodRequestGateway.FoodGatewayResponse
+import elmer.worker.FoodRequestService._
+import elmer.core.util.ElmerJsonProtocol._
 
 
 trait WebJsonImplicitsT extends DefaultJsonProtocol with SprayJsonSupport {
+
   implicit val foodRequestServiceFormat   = jsonFormat2(FoodServiceRequest)
   implicit val foodResponseServiceFormat  = jsonFormat2(FoodServiceResponse)
-  implicit val incomingRequestFormat      = jsonFormat2(IncomingFoodServiceRequest)
-  implicit val incomingResponseFormat     = jsonFormat2(IncomingFoodServiceResponse)
+
+  implicit val incomingResponseFormat     = jsonFormat2(FoodGatewayResponse)
 }

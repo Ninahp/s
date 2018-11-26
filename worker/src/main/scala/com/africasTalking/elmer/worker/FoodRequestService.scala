@@ -3,20 +3,25 @@ package worker
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import akka.actor.{Actor, ActorLogging, Props}
-import akka.pattern.ask
-import akka.pattern.pipe
+import akka.actor.{ Actor, ActorLogging, Props }
+import akka.pattern.{ ask, pipe }
 import akka.util.Timeout
 
-import com.africasTalking.elmer.core._
-import config.ElmerConfig
-import util.StringComplianceServiceT
-import worker.FoodRequestGateway._
+import io.atlabs._
+
+import horus.core.util.ATCCPrinter
+
+import com.africasTalking._
+
+import elmer.core.util.ElmerEnum.Status
+import elmer.core.config.ElmerConfig
+import elmer.core.util.StringComplianceServiceT
+import elmer.worker.FoodRequestGateway._
 
 
 object FoodRequestService {
-  case class FoodServiceRequest(name: String, quantity: Int)
-  case class FoodServiceResponse(status: String,description:String)
+  case class FoodServiceRequest(name: String, quantity: Int) extends ATCCPrinter
+  case class FoodServiceResponse(status: String,description:String) extends ATCCPrinter
 }
 
 class FoodRequestService extends Actor
@@ -25,8 +30,8 @@ class FoodRequestService extends Actor
 
   import FoodRequestService._
 
-  val lunchRequestGateway     = createRequestGateway
-    def createRequestGateway  = context.actorOf(Props[FoodRequestGateway])
+  private val requestGateway  = createRequestGateway
+  def createRequestGateway    = context.actorOf(Props[FoodRequestGateway])
   implicit val timeout        = Timeout(ElmerConfig.defaultTimeout)
 
   override def receive: Receive = {
@@ -39,10 +44,10 @@ class FoodRequestService extends Actor
       nameFormat =="" match{
         case true  =>
           //The word doesn't exist
-          currentSender ! IncomingFoodServiceResponse("Bad Request", "Content was malformed")
+          currentSender ! FoodGatewayResponse(Status.BadRequest, "Content was malformed")
 
         case false =>
-          (lunchRequestGateway ? IncomingFoodServiceRequest(nameFormat, req.quantity)).mapTo[IncomingFoodServiceResponse] pipeTo currentSender
+          (requestGateway ? FoodGatewayRequest(nameFormat, req.quantity)).mapTo[FoodGatewayResponse] pipeTo currentSender
       }
   }
 }
