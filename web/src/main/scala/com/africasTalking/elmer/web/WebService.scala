@@ -13,6 +13,10 @@ import akka.pattern.ask
 import akka.util.Timeout
 import akka.event.Logging
 
+import io.atlabs._
+
+import horus.core.config.ATConfig
+
 import com.africasTalking._
 
 import elmer.core.config.ElmerConfig
@@ -34,7 +38,7 @@ trait WebServiceT extends ElmerJsonSupportT {
 
   private val FoodOrderService              = actorRefFactory.actorOf(Props[FoodOrderService])
 
-  implicit val timeout                      = Timeout(ElmerConfig.httpRequestTimeout)
+  implicit val timeout                      = Timeout(ATConfig.httpRequestTimeout)
 
   import QueryService._
 

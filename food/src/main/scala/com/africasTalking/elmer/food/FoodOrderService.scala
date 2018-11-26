@@ -14,6 +14,8 @@ import spray.json._
 
 import io.atlabs._
 
+import horus.core.config.ATConfig
+
 import horus.core.util.ATCCPrinter
 
 import com.africasTalking._
@@ -52,7 +54,7 @@ class FoodOrderService extends Actor
 
   private val queryService                  = system.actorOf(Props[BrokerService])
 
-  implicit val timeout                      = Timeout(ElmerConfig.httpRequestTimeout)
+  implicit val timeout                      = Timeout(ATConfig.httpRequestTimeout)
 
   import FoodOrderService._
   import context.dispatcher

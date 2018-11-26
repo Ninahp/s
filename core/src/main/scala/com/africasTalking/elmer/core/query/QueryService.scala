@@ -36,7 +36,7 @@ class QueryService extends Actor
 
   implicit val actorSystem              = context.system
 
-  implicit val timeout                  = Timeout(ElmerConfig.queryTimeout)
+  implicit val timeout                  = Timeout(ATConfig.httpRequestTimeout)
 
   import QueryService._
 
