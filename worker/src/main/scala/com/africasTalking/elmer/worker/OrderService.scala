@@ -2,16 +2,20 @@ package com.africasTalking.elmer
 package worker
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
+
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import akka.actor.{Actor, ActorLogging, ActorSystem}
+import akka.actor.{ Actor, ActorLogging, ActorSystem }
 import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
+import akka.http.scaladsl.unmarshalling.Unmarshal
+
 import io.atlabs._
 import horus.core.http.client.ATHttpClientT
+
 import com.africasTalking.elmer.core.ElmerConfig
 import OrderService._
-import spray.json.DefaultJsonProtocol._
+
 
 
 object OrderService {
@@ -26,7 +30,7 @@ object OrderService {
   case object Delivered extends Response
   case object Failure extends Response
 
-  case class BrokerResponse(Status: String)
+  case class BrokerResponse(status: String)
 
 }
 
@@ -37,8 +41,6 @@ class OrderService() extends Actor
   with ProductMarshaller {
 
   override implicit val system: ActorSystem = context.system
-
-
 
   def receive = {
 
@@ -61,6 +63,8 @@ class OrderService() extends Actor
             case Failure(ex) =>
               log.error(ex.getMessage)
 
+
+
             case Success(resp) =>
               resp.status.isSuccess() match {
 
@@ -68,12 +72,10 @@ class OrderService() extends Actor
                   currentSender ! OrderService.Failure
 
                 case true =>
-                  val rsp = resp.data.split("\"")
-                  rsp(3) match {
-                    case "Accepted"    => currentSender ! Accepted
-                    case "Delivered"   => currentSender ! Delivered
-                    case "Failure"     => currentSender ! OrderService.Failure
-                    case other: String => log.info(other)
+                  val brokerResponse = Unmarshal(resp.data).to[BrokerResponse].map {
+                    case BrokerResponse("Accepted") => currentSender ! Accepted
+                    case BrokerResponse("Delivered") => currentSender ! Delivered
+                    case BrokerResponse("Failure") => currentSender ! OrderService.Failure
                   }
               }
           }

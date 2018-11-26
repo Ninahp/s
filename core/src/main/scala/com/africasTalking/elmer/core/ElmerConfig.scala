@@ -5,7 +5,7 @@ import horus.core.config.ATBaseConfigT
 
 object ElmerConfig extends ElmerConfigTrait
 
-trait ElmerConfigTrait extends ATBaseConfigT{
+private[core] trait ElmerConfigTrait extends ATBaseConfigT {
 
   val host = config.getString("elmer.interface.web.host")
   val port = config.getInt("elmer.interface.web.port")

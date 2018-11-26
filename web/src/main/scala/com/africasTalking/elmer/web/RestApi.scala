@@ -1,26 +1,30 @@
 package com.africasTalking.elmer
 package web
 
-import akka.actor.{ActorRef, ActorSystem, Props}
+import scala.concurrent.ExecutionContext
+
+
+import akka.actor.{ ActorRef, ActorSystem, Props }
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.util.Timeout
-import com.africasTalking.elmer.core.ElmerConfig
-import com.africasTalking.elmer.worker.OrderService._
-import com.africasTalking.elmer.worker.{OrderService, ProductMarshaller}
-import io.atlabs.horus.core.util.ATUtil._
-import scala.concurrent.duration._
 
-import scala.concurrent.ExecutionContext
+import io.atlabs._
+import horus.core.util.ATUtil
+
+import core.ElmerConfig
+
+import worker.OrderService._
+import worker.{ OrderService, ProductMarshaller }
 
 
-class RestApi(implicit  system : ActorSystem ) extends Routes{
+class RestApi(implicit  system : ActorSystem ) extends Routes {
   override implicit def executionContext: ExecutionContext = system.dispatcher
 
-  override implicit def requestTimeOut: Timeout =  5 seconds //parseFiniteDuration(ElmerConfig.port).get
+  override implicit def requestTimeOut: Timeout =   ATUtil.parseFiniteDuration(ElmerConfig.timeout).get
 
-  override def createOrdererActor: ActorRef = system.actorOf(Props(new OrderService()),"orderer")
+  override def createOrdererActor: ActorRef = system.actorOf(Props(new OrderService()),"Order-Service")
 
 }
 
