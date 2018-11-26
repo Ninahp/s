@@ -74,10 +74,13 @@ class FoodOrderService extends Actor
               case ex: Throwable =>
                 log.info(s"Error while processing broker response [$response] for request [$order]", Some(ex))
             currentSender ! FoodOrderServiceResponse(
-              status          = None,
+              status          = None
             )                }
         case Failure(error) =>
           log.info(s"$error")
+            currentSender ! FoodOrderServiceResponse(
+              status          = None
+            ) 
       }
   }
 }
