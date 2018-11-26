@@ -14,14 +14,6 @@ import OrderService._
 import spray.json.DefaultJsonProtocol._
 
 
-
-
-
-
-
-
-
-
 object OrderService {
 
   //request trait
