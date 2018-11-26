@@ -52,7 +52,7 @@ class FoodOrderService extends Actor
 
   implicit val system                       = context.system
 
-  private val queryService                  = system.actorOf(Props[BrokerService])
+  private val brokerService                 = system.actorOf(Props[BrokerService])
 
   implicit val timeout                      = Timeout(ATConfig.httpRequestTimeout)
 
@@ -63,7 +63,7 @@ class FoodOrderService extends Actor
     case PlaceOrder(order) => 
       log.info("processing " + PlaceOrder)
       val currentSender = sender
-      val response = (queryService ? PlaceOrderRequest(order))
+      val response = (brokerService ? PlaceOrderRequest(order))
 
       response onComplete {
         case Success(response) =>
