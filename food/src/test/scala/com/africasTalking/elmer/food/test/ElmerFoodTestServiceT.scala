@@ -22,14 +22,14 @@ abstract class ElmerFoodTestServiceT extends TestKit(ActorSystem("MyTestSystem")
     with Matchers
     with BeforeAndAfterAll
 {
-  val order = FoodOrderServiceRequest(
+  val validOrder = FoodOrderServiceRequest(
     quantity = 2,
     name     = "Ugali"
   )
 
   val invalidOrder = FoodOrderServiceRequest(
     quantity = 2,
-    name     = "Ugali"
+    name     = ""
   )
 
   def actorRefFactory  = system

@@ -21,16 +21,16 @@ import elmer.food.marshalling._
 import elmer.food.test._
 
 class BrokerServiceSpec extends ElmerFoodTestServiceT {
-  val brokerService 		  = system.actorOf(Props(new FoodOrderService))
+  val brokerService 		  = system.actorOf(Props(new BrokerService))
   "The BrokerService" must {
     "reject an invalid order request" in {
-      brokerService ! PlaceOrderRequest(order)
+      brokerService ! PlaceOrderRequest(invalidOrder)
       expectMsg(FiniteDuration(20, "seconds"), FoodOrderServiceResponse(
         status       = None
       ))
     }
   	"process a valid order request" in {
-      brokerService ! PlaceOrderRequest(order)
+      brokerService ! PlaceOrderRequest(validOrder)
       expectMsg(FiniteDuration(20, "seconds"), FoodOrderServiceResponse(
         status       = Some("Accepted")
       ))

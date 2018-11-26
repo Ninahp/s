@@ -24,7 +24,7 @@ class FoodOrderServiceSpec extends ElmerFoodTestServiceT {
   "The FoodOrderService" must {
     "send the food order to the broker and get a response" in {
       val foodOrderService 		  = system.actorOf(Props(new FoodOrderService))
-      foodOrderService ! PlaceOrder(order)
+      foodOrderService ! PlaceOrder(validOrder)
       expectMsg(FiniteDuration(20, "seconds"), FoodOrderServiceResponse(
         status       = Some("Accepted"),
       ))
