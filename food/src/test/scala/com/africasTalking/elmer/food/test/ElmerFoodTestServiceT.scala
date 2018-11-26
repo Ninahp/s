@@ -11,6 +11,8 @@ import io.atlabs._
 
 import com.africasTalking._
 
+import BrokerService._
+
 import FoodOrderService._
 
 import elmer.food.marshalling._

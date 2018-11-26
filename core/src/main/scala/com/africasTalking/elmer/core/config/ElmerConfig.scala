@@ -6,13 +6,10 @@ import com.typesafe.config.ConfigFactory
 
 import io.atlabs._
 
+import horus.core.config.ATBaseConfigT
 import horus.core.util.ATUtil
 
-import horus.core.config.ATBaseConfigT
-
-import com.africasTalking._
-
-
+// Extend horus.core.config.ATBaseConfigT
 object ElmerConfig extends ElmerConfig
 
 private[config] trait ElmerConfig {

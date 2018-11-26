@@ -16,11 +16,9 @@ import org.scalatest.{ Matchers, WordSpec }
 
 import com.africasTalking._
 
-import elmer.core.query._
-
 import elmer.food._
 
-import QueryService._
+import BrokerService._
 
 import FoodOrderService._
 
@@ -40,14 +38,6 @@ class WebServiceSpec extends WordSpec
   implicit val routeTestTimeout = RouteTestTimeout(FiniteDuration(20, "seconds"))
   
   "ElmerWebService" should {
-    "return a list of available foods (GET /food/fetch)" in {
-      val request = HttpRequest(uri = "/food/fetch")
-      request ~> routes ~> check {
-        status should ===(StatusCodes.OK)
-        contentType should ===(ContentTypes.`application/json`)
-      }
-    }
-
     "be able to add food orders (POST /food/order)" in {
       val order = FoodOrderServiceRequest(
 		    quantity = 2,

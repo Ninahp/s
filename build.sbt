@@ -33,7 +33,7 @@ lazy val core = (project in file("core")).
       "com.typesafe.akka"             %% "akka-http-spray-json" % akkaHttpVersion,
       "com.africasTalking"            %% "atlas-core"           % "0.1.0",
       "com.africasTalking"            %% "atlas-crunch"         % "0.1.0",
-      "io.atlabs"                     %% "horus-core"           % "0.1.0",
+      "io.atlabs"                     %% "horus-core"           % "0.1.7",
       "com.github.nscala-time"        %% "nscala-time"          % "2.20.0",
       "commons-daemon"                %  "commons-daemon"       % "1.1.0",
       "org.scalatest"                 %% "scalatest"            % scalaTestVersion % Test,

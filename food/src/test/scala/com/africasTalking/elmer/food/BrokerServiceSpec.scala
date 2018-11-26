@@ -12,13 +12,13 @@ import com.africasTalking._
 
 import elmer.core.config._
 
-import elmer.core.query.QueryService._
-
-import FoodOrderService._
-
 import elmer.food.marshalling._
 
 import elmer.food.test._
+
+import BrokerService._
+
+import FoodOrderService._
 
 class BrokerServiceSpec extends ElmerFoodTestServiceT {
   val brokerService 		  = system.actorOf(Props(new BrokerService))

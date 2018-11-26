@@ -21,8 +21,6 @@ import com.africasTalking._
 
 import elmer.core.config.ElmerConfig
 
-import elmer.core.query.QueryService
-
 import elmer.food._
 
 import FoodOrderService._
@@ -34,13 +32,11 @@ trait WebServiceT extends ElmerJsonSupportT {
 
   implicit def actorRefFactory: ActorRefFactory
 
-  private val queryService                  = actorRefFactory.actorOf(Props[QueryService])
-
   private val FoodOrderService              = actorRefFactory.actorOf(Props[FoodOrderService])
 
   implicit val timeout                      = Timeout(ATConfig.httpRequestTimeout)
 
-  import QueryService._
+  import BrokerService._
 
   lazy val route = {
     path("food" / "order") {
@@ -50,16 +46,6 @@ trait WebServiceT extends ElmerJsonSupportT {
             ).mapTo[FoodOrderServiceResponse])
           }
         }
-    } ~
-    path("food" / "fetch") {
-        get {     
-          onComplete((queryService ? FoodFetchQueryServiceRequest)) { 
-            case Success(data) => 
-              complete(data.asInstanceOf[List[String]])
-            case Failure(e)    => 
-              complete(StatusCodes.BadRequest)
-        }
       }
-    }
   }
 }
