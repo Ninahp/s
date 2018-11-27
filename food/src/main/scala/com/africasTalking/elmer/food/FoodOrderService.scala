@@ -15,6 +15,7 @@ import spray.json._
 import io.atlabs._
 
 import horus.core.config.ATConfig
+import horus.core.snoop.SnoopErrorPublisherT
 import horus.core.util.ATCCPrinter
 
 import com.africasTalking._
@@ -25,6 +26,7 @@ import elmer.food.marshalling._
 
 import BrokerService._
 
+import elmer.core.util.ElmerEnum._
 
 object FoodOrderService {
   case class PlaceOrder(
@@ -38,7 +40,8 @@ object FoodOrderService {
 
 class FoodOrderService extends Actor
     with ActorLogging
-    with ElmerJsonSupportT {
+    with ElmerJsonSupportT
+    with SnoopErrorPublisherT {
 
   implicit val system                       = context.system
 
@@ -62,14 +65,15 @@ class FoodOrderService extends Actor
               currentSender ! brokerResponse
             } catch {
               case ex: Throwable =>
-                log.info(s"Error while processing broker response [$response] for request [$order]", Some(ex))
+                publishError(s"Error while processing broker response [$response] for request [$order]", Some(ex))
             currentSender ! FoodOrderServiceResponse(
-              status          = None
-            )                }
+              status          = Status.Failure
+            ) 
+                           }
         case Failure(error) =>
-          log.info(s"$error")
+          publishError(s"$error")
             currentSender ! FoodOrderServiceResponse(
-              status          = None
+              status          = Status.Failure
             ) 
       }
   }

@@ -12,6 +12,8 @@ import com.africasTalking._
 
 import elmer.core.config._
 
+import elmer.core.util.ElmerEnum._
+
 import elmer.food.marshalling._
 
 import elmer.food.test._
@@ -26,13 +28,13 @@ class BrokerServiceSpec extends ElmerFoodTestServiceT {
     "reject an invalid order request" in {
       brokerService ! PlaceOrderRequest(invalidOrder)
       expectMsg(FiniteDuration(20, "seconds"), FoodOrderServiceResponse(
-        status       = None
+        status       = Status.Failure
       ))
     }
   	"process a valid order request" in {
       brokerService ! PlaceOrderRequest(validOrder)
       expectMsg(FiniteDuration(20, "seconds"), FoodOrderServiceResponse(
-        status       = Some("Accepted")
+        status       = Status.Accepted
       ))
     }
   }

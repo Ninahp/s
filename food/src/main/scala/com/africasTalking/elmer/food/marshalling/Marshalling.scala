@@ -11,12 +11,15 @@ import horus.core.util.ATJsonProtocol
 
 import com.africasTalking._
 
+import elmer.core.util._
+
 import elmer.food._
 
 trait ElmerJsonSupportT extends SprayJsonSupport with DefaultJsonProtocol {
 
   import ATJsonProtocol._
   import BrokerService._
+  import ElmerJsonProtocol._
 
   implicit val FoodOrderServiceResponseFormat       = jsonFormat1(FoodOrderServiceResponse)
   implicit val FoodOrderServiceRequestFormat        = jsonFormat2(FoodOrderServiceRequest)

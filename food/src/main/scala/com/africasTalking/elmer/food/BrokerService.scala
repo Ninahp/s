@@ -3,7 +3,7 @@ package com.africasTalking.elmer.food
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{ Success, Failure }
 
-import akka.actor.{ Actor, ActorSystem, ActorLogging }
+import akka.actor.{ Actor, ActorSystem, ActorLogging, ActorRef }
 import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.model._
 import akka.pattern.ask
@@ -16,12 +16,14 @@ import spray.json._
 import io.atlabs._
 
 import horus.core.http.client.ATHttpClientT
-
-import horus.core.util.{ ATJsonProtocol, ATCCPrinter, ATUtil }
+import horus.core.snoop.SnoopErrorPublisherT
+import horus.core.util.{ ATJsonProtocol, ATCCPrinter, ATInstanceManagerT, ATUtil }
 
 import com.africasTalking._
 
 import elmer.core.config.ElmerConfig
+
+import elmer.core.util.ElmerEnum._
 
 import elmer.food.marshalling._ 
 
@@ -32,10 +34,9 @@ object BrokerService{
     quantity: Int,
     name: String
   )extends ATCCPrinter
-// I would prefer is status was an Enum with values such as Accepted,
- // Completed, Failed (matching what either publishes)
+
   case class FoodOrderServiceResponse(
-    status: Option[String],
+    status: Status.Value,
   )extends ATCCPrinter
 
 }
@@ -43,7 +44,8 @@ object BrokerService{
 class BrokerService extends Actor
     with ActorLogging
     with ATHttpClientT
-    with ElmerJsonSupportT {
+    with ElmerJsonSupportT 
+    with SnoopErrorPublisherT {
 
   implicit val system = context.system
 
@@ -73,20 +75,26 @@ class BrokerService extends Actor
           log.info(response.status.toString)
           response.status.isSuccess match {
             case true =>
-              currentSender ! response.data.parseJson.convertTo[FoodOrderServiceResponse]
-            case false =>
-              // Extend horus.core.snoop.SnoopErrorPublisherT and publish an error here
-              log.info("Unexpected response " + response + " for request " + order)
+              try {
+                val brokerResponse = response.data.parseJson.convertTo[FoodOrderServiceResponse]
+                currentSender ! brokerResponse
+              } catch {
+                case ex: Throwable =>
+                  publishError(s"Error while parsing json response [$response]", Some(ex))
               currentSender ! FoodOrderServiceResponse(
-              status          = None
+                status          = Status.Failure
+              )                }
+            case false =>
+              currentSender ! FoodOrderServiceResponse(
+              status          = Status.Failure
             )
+              publishError("Unexpected response " + response + " for request " + order)
           }
-          // Publish an error here and send a response back to the currentSender
         case Failure(error) =>
-          log.info(s"$error")
+          publishError(s"$error")
+          currentSender ! FoodOrderServiceResponse(
+              status          = Status.Failure
+        )
       }
   }
 }
-// Wrap this in a try-catch block, in case we run into any JSON errors.
-// Also, I would rather you first read the response 
-// into the response type then compose a FoodOrderServiceResponse
