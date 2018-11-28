@@ -43,11 +43,11 @@ class FoodOrderService extends Actor
     with ElmerJsonSupportT
     with SnoopErrorPublisherT {
 
-  implicit val system                       = context.system
+  implicit val system        = context.system
 
-  private val brokerService                 = system.actorOf(Props[BrokerService])
+  private val brokerService  = system.actorOf(Props[BrokerService])
 
-  implicit val timeout                      = Timeout(ATConfig.httpRequestTimeout)
+  implicit val timeout       = Timeout(ATConfig.httpRequestTimeout)
 
   import FoodOrderService._
   import context.dispatcher
