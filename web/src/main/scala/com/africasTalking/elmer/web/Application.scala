@@ -2,11 +2,11 @@ package com.africasTalking.elmer
 package web
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
-
+import akka.http.scaladsl.Http
 
 import io.atlabs._
+
 import horus.core.util.{ ATLogT, ApplicationLifecycle }
 
 import core.ElmerConfig

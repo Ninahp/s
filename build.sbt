@@ -55,7 +55,7 @@ lazy val core = (project in file("core")).
       "com.typesafe.akka"      %% "akka-http-spray-json" % akkaHttpVersion,
       "ch.qos.logback"         %  "logback-classic"      % "1.2.1",
       "ch.qos.logback"         %  "logback-core"         % "1.2.1",
-      "io.atlabs"              %% "horus-core"           % "0.1.7" withSources() withJavadoc()
+      "io.atlabs"              %% "horus-core"           % "0.1.7" 
     )
   )
 

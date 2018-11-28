@@ -3,26 +3,27 @@ package web
 
 import scala.concurrent.ExecutionContext
 
-
-import akka.actor.{ ActorRef, ActorSystem, Props }
+import akka.actor.{ ActorRef, ActorSystem, Props}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.util.Timeout
 
 import io.atlabs._
-import horus.core.util.ATUtil
 
-import core.ElmerConfig
+import horus.core._
+import config.ATConfig
+
+import core.util.ElmerEnum.Status._
 
 import worker.OrderService._
-import worker.{ OrderService, ProductMarshaller }
+import worker.{OrderService, ProductMarshaller}
 
 
 class RestApi(implicit  system : ActorSystem ) extends Routes {
   override implicit def executionContext: ExecutionContext = system.dispatcher
 
-  override implicit def requestTimeOut: Timeout =   ATUtil.parseFiniteDuration(ElmerConfig.timeout).get
+  override implicit def requestTimeOut: Timeout = ATConfig.httpRequestTimeout
 
   override def createOrdererActor: ActorRef = system.actorOf(Props(new OrderService()),"Order-Service")
 
@@ -36,11 +37,11 @@ trait Routes extends ProductApi with ProductMarshaller {
 
   private def buy  = path("buy"){
     post {
-      entity(as[ProductOrder]){ prod =>
+      entity(as[OrderServiceRequest]){ prod =>
         onSuccess(getProduct(prod))  {
-          case Accepted => complete("Request Accepted")
-          case Failure => complete("Request Failed")
-          case Delivered => complete("Request Delivered")
+          case Accepted   =>  complete("Request Accepted")
+          case Failure    =>  complete("Request Failed")
+          case Delivered  =>  complete("Request Delivered")
         }
 
       }
@@ -58,7 +59,7 @@ trait ProductApi{
 
   lazy val orderer = createOrdererActor
 
-  def getProduct(product : ProductOrder) = {
-    (orderer ? product).mapTo[OrderServiceResponse]
+  def getProduct(product : OrderServiceRequest) = {
+    (orderer ? product).mapTo[Status]
   }
 }
