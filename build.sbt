@@ -1,5 +1,3 @@
-enablePlugins(JavaAppPackaging,JavaServerAppPackaging,sbtdocker.DockerPlugin,DockerComposePlugin)
-
 lazy val akkaVersion = "2.5.16"
 lazy val akkaStreamVersion = "2.5.16"
 lazy val akkaHttpVersion = "10.1.5"
@@ -20,7 +18,7 @@ lazy val sharedSettings = Seq(
     "-unchecked"
   ),
   libraryDependencies ++= Seq(
-    "io.atlabs"         %% "horus-core"           % "0.1.0",
+    "io.atlabs"         %% "horus-core"           % "0.1.7",
     "com.typesafe.akka" %% "akka-actor"           % akkaVersion,
     "com.typesafe.akka" %% "akka-http"            % akkaHttpVersion,
     "io.spray"          %%  "spray-json"          % "1.3.4",
@@ -28,7 +26,6 @@ lazy val sharedSettings = Seq(
     "com.typesafe.akka" %% "akka-slf4j"           % akkaVersion,
     "ch.qos.logback"    % "logback-classic"       % "1.2.3",
     "org.scalatest"     %% "scalatest"            % "3.0.5"            % "test",
-    "org.scalactic"     %% "scalactic"            % "3.0.5",
     "com.typesafe.akka" %% "akka-testkit"         % akkaVersion        % Test,
     "com.typesafe.akka" %% "akka-http-testkit"    % akkaHttpVersion    % Test
   )
@@ -37,8 +34,8 @@ lazy val sharedSettings = Seq(
 lazy val elmer  = (project in file("."))
   .aggregate(
     core,
-    web, 
-    worker
+    worker,
+    web
   )
 
 lazy val core   = (project in file("core"))

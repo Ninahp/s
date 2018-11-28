@@ -14,10 +14,13 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="sbt: com.typesafe.akka:akka-http-testkit_2.12:10.1.5:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.atlabs:horus-core_2.12:0.1.7:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.googlecode.libphonenumber:prefixmapper:2.105:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.googlecode.libphonenumber:libphonenumber:8.9.16:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.googlecode.libphonenumber:carrier:1.95:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="sbt: com.typesafe.akka:akka-stream-testkit_2.12:2.5.12:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="sbt: org.scalatest:scalatest_2.12:3.0.5:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="sbt: org.scala-lang.modules:scala-xml_2.12:1.0.6:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.6:jar" level="project" />
     <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.12.6:jar" level="project" />
     <orderEntry type="library" name="sbt: org.typelevel:macro-compat_2.12:1.1.1:jar" level="project" />
     <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.25:jar" level="project" />
@@ -40,7 +43,6 @@
     <orderEntry type="library" name="sbt: io.netty:netty-codec:4.0.47.Final:jar" level="project" />
     <orderEntry type="library" name="sbt: io.netty:netty-buffer:4.0.47.Final:jar" level="project" />
     <orderEntry type="library" name="sbt: io.dropwizard.metrics:metrics-core:3.2.2:jar" level="project" />
-    <orderEntry type="library" name="sbt: io.atlabs:horus-core_2.12:0.1.0:jar" level="project" />
     <orderEntry type="library" name="sbt: commons-daemon:commons-daemon:1.1.0:jar" level="project" />
     <orderEntry type="library" name="sbt: commons-codec:commons-codec:1.11:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.play:play-iteratees_2.12:2.6.1:jar" level="project" />
@@ -53,9 +55,6 @@
     <orderEntry type="library" name="sbt: com.outworkers:phantom-streams_2.12:2.24.10:jar" level="project" />
     <orderEntry type="library" name="sbt: com.outworkers:phantom-dsl_2.12:2.24.10:jar" level="project" />
     <orderEntry type="library" name="sbt: com.outworkers:phantom-connectors_2.12:2.24.10:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.googlecode.libphonenumber:prefixmapper:2.102:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.googlecode.libphonenumber:libphonenumber:8.9.13:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.googlecode.libphonenumber:carrier:1.92:jar" level="project" />
     <orderEntry type="library" name="sbt: com.google.guava:guava:19.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.github.jnr:jnr-x86asm:1.0.2:jar" level="project" />
     <orderEntry type="library" name="sbt: com.github.jnr:jnr-posix:3.0.27:jar" level="project" />
@@ -69,11 +68,12 @@
     <orderEntry type="module" module-name="worker" exported="" />
     <orderEntry type="library" name="sbt: ch.qos.logback:logback-classic:1.2.3:jar" level="project" />
     <orderEntry type="library" name="sbt: ch.qos.logback:logback-core:1.2.3:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scalactic:scalactic_2.12:3.0.5:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-actor_2.12:2.5.16:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-protobuf_2.12:2.5.16:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-slf4j_2.12:2.5.16:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-stream_2.12:2.5.16:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="sbt: com.typesafe.akka:akka-testkit_2.12:2.5.16:jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="sbt: org.scala-lang:scala-reflect:2.12.6:jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="sbt: org.scalactic:scalactic_2.12:3.0.5:jar" level="project" />
   </component>
 </module>

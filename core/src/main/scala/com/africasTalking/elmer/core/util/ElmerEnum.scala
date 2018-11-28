@@ -10,9 +10,11 @@ object ElmerEnum {
     val beefFry    = Value(4)
     val Egusi      = Value(5)
     val PepperSoup = Value(6)
+
+    def contains(s:String) = values.exists(_.toString == s)
  }
 
-  object Status extends Enumeration {
+  object FoodOrderStatus extends Enumeration {
     val Accepted      = Value(200)
     val BadRequest    = Value(400)
     val InternalError = Value(500)

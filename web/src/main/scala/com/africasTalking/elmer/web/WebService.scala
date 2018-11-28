@@ -6,11 +6,14 @@ import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.util.Timeout
 
+import io.atlabs._
+
+import horus.core.config.ATConfig
+
 import com.africasTalking._
 
-import elmer.core.config.ElmerConfig
+import elmer.core.util.ElmerEnum._
 
-import elmer.worker.FoodRequestGateway.FoodGatewayResponse
 import elmer.worker.FoodRequestService
 
 import elmer.web.marshalling.WebJsonImplicitsT
@@ -21,7 +24,7 @@ trait ElmerWebServiceT extends WebJsonImplicitsT {
   import FoodRequestService._
 
   def actorRefFactory: ActorRefFactory
-  implicit val timeout   = Timeout(ElmerConfig.defaultTimeout)
+  implicit val timeout   = Timeout(ATConfig.httpRequestTimeout)
 
   private val foodRequestService = createFoodRequestService
   def createFoodRequestService          = actorRefFactory.actorOf(Props[FoodRequestService])
@@ -30,7 +33,13 @@ trait ElmerWebServiceT extends WebJsonImplicitsT {
     path("request") {
       post { entity(as[FoodServiceRequest]) {request =>
         complete{
-          (foodRequestService ? request).mapTo[FoodGatewayResponse]
+          FoodEnum.contains(request.name) match {
+            case true  =>
+              (foodRequestService ? request).mapTo[FoodServiceResponse]
+
+            case false =>
+              FoodServiceResponse(FoodOrderStatus.BadRequest.toString, "Content was malformed")
+          }
         }
       }}
     }

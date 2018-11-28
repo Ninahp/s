@@ -1,5 +1,5 @@
 package com.africasTalking.elmer
-package worker
+package worker.test
 
 import akka.actor.ActorSystem
 import akka.testkit.{ ImplicitSender, TestKit }
@@ -7,9 +7,7 @@ import akka.testkit.{ ImplicitSender, TestKit }
 import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
 
 
-trait FoodRequestBaseTestConfigT extends  FoodRequestBaseTestConfig
-
-class FoodRequestBaseTestConfig extends TestKit(ActorSystem("MyTestSystem"))
+class WorkerTestService extends TestKit(ActorSystem("MyTestSystem"))
   with ImplicitSender
   with WordSpecLike
   with Matchers

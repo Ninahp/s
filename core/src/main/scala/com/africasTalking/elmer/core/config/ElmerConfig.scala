@@ -15,7 +15,4 @@ private[config] trait ElmerConfigT extends ATBaseConfigT {
 
   //Gateway
   val gatewayUrl     = config.getString("elmer.gateway.order-request-url")
-
-  //Timeout
-  val defaultTimeout = ATConfig.httpRequestTimeout
 }

@@ -5,15 +5,15 @@ import spray.json.{ DefaultJsonProtocol, DeserializationException, JsString, JsV
 
 import com.africasTalking._
 
-import elmer.core.util.ElmerEnum.{ FoodEnum, Status }
+import elmer.core.util.ElmerEnum.{ FoodEnum, FoodOrderStatus }
 
 
 object ElmerJsonProtocol extends DefaultJsonProtocol {
 
-  implicit object StatusJsonFormat extends RootJsonFormat[Status.Value] {
-    def write(obj: Status.Value): JsValue = JsString(obj.toString)
-    def read(json: JsValue): Status.Value = json match {
-      case JsString(str) => Status.withName(str)
+  implicit object StatusJsonFormat extends RootJsonFormat[FoodOrderStatus.Value] {
+    def write(obj: FoodOrderStatus.Value): JsValue = JsString(obj.toString)
+    def read(json: JsValue): FoodOrderStatus.Value = json match {
+      case JsString(str) => FoodOrderStatus.withName(str)
       case _ => throw new DeserializationException("Enum string expected")
     }
   }

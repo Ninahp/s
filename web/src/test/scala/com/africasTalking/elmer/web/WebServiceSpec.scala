@@ -2,11 +2,13 @@ package com.africasTalking.elmer
 package web
 
 import scala.concurrent.duration._
+
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.util.ByteString
-import org.scalatest.{Matchers, WordSpec}
+
+import org.scalatest.{ Matchers, WordSpec }
 
 
 class WebServiceSpec extends WordSpec
@@ -35,7 +37,7 @@ class WebServiceSpec extends WordSpec
     }
 
     "return an OK status when sent a valid request" in {
-      testRequest("ugali",10) ~> Route.seal(route) ~> check {
+      testRequest("Ugali",10) ~> Route.seal(route) ~> check {
         status shouldEqual StatusCodes.OK
         responseAs[String] shouldEqual """{"status":"Accepted","description":"Request Accepted"}"""
       }
