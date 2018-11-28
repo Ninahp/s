@@ -19,5 +19,5 @@ private[config] trait ElmerConfigT extends ATBaseConfigT {
   // API
   val apiInterface        = config.getString("elmer.interface.web.host")
   val apiPort             = config.getInt("elmer.interface.web.port")
-
+  
 }

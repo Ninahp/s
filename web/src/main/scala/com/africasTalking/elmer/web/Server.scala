@@ -1,6 +1,12 @@
 package com.africasTalking.elmer.web
 
+import akka.actor.ActorSystem
+
 import io.atlabs._
+
+import com.africasTalking._
+
+import atlas.core.util.AtlasCoreServiceT
 
 import horus.core.util.{ AbstractApplicationDaemon, ATApplicationT }
 

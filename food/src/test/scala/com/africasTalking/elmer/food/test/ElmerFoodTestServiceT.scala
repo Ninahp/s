@@ -11,6 +11,8 @@ import io.atlabs._
 
 import com.africasTalking._
 
+import elmer.core.util.ElmerCoreServiceT
+
 import BrokerService._
 
 import FoodOrderService._
@@ -23,7 +25,11 @@ abstract class ElmerFoodTestServiceT extends TestKit(ActorSystem("MyTestSystem")
     with WordSpecLike
     with Matchers
     with BeforeAndAfterAll
+    with ElmerCoreServiceT
 {
+  override def snoopServiceName = "TestService"
+  override def actorRefFactory  = system
+
   val validOrder = FoodOrderServiceRequest(
     quantity = 2,
     name     = "Ugali"
@@ -33,9 +39,6 @@ abstract class ElmerFoodTestServiceT extends TestKit(ActorSystem("MyTestSystem")
     quantity = 2,
     name     = ""
   )
-
-  def actorRefFactory  = system
-
   override def beforeAll {
     Thread.sleep(1000)
   }

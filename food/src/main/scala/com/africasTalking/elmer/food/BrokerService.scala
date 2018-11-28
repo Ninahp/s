@@ -85,10 +85,10 @@ class BrokerService extends Actor
                 status          = Status.Failure
               )                }
             case false =>
+              publishError("Unexpected response " + response + " for request " + order)
               currentSender ! FoodOrderServiceResponse(
               status          = Status.Failure
             )
-              publishError("Unexpected response " + response + " for request " + order)
           }
         case Failure(error) =>
           publishError(s"$error")

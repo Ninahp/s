@@ -21,6 +21,8 @@ import com.africasTalking._
 
 import elmer.core.config.ElmerConfig
 
+import elmer.core.util.ElmerCoreServiceT
+
 import elmer.food._
 
 import FoodOrderService._
@@ -28,21 +30,23 @@ import FoodOrderService._
 import elmer.web.marshalling._
 
 
-trait WebServiceT extends ElmerJsonSupportT {
+trait WebServiceT extends ElmerJsonSupportT
+ with ElmerCoreServiceT{
+  
+  override def snoopServiceName = "ElmerSnoopService"
+  
+  private val foodOrderService  = actorRefFactory.actorOf(Props[FoodOrderService])
 
-  implicit def actorRefFactory: ActorRefFactory
-
-  private val FoodOrderService              = actorRefFactory.actorOf(Props[FoodOrderService])
-
-  implicit val timeout                      = Timeout(ATConfig.httpRequestTimeout)
+  implicit val timeout          = Timeout(ATConfig.httpRequestTimeout)
 
   import BrokerService._
+
 
   lazy val route = {
     path("food" / "order") {
         post {
           entity(as[FoodOrderServiceRequest]) { order =>
-                complete((FoodOrderService ? PlaceOrder(order)
+                complete((foodOrderService ? PlaceOrder(order)
             ).mapTo[FoodOrderServiceResponse])
           }
         }
