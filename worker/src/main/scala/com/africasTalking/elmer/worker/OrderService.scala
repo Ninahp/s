@@ -4,31 +4,31 @@ package worker
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{ Failure, Success }
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.actor.{ Actor, ActorLogging, ActorSystem }
 import akka.http.scaladsl.marshalling.Marshal
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 
 import io.atlabs._
+
 import horus.core.http.client.ATHttpClientT
 
 import com.africasTalking.elmer.core.ElmerConfig
-import OrderService._
+
 
 
 
 object OrderService {
 
-  //request trait
-  sealed trait Order
-  case class ProductOrder(name: String, quantity: Int) extends Order
+
+  case class ProductOrder(name: String, quantity: Int)
 
   // response trait
-  sealed trait Response
-  case object Accepted extends Response
-  case object Delivered extends Response
-  case object Failure extends Response
+  sealed trait OrderServiceResponse
+  case object Accepted extends OrderServiceResponse
+  case object Delivered extends OrderServiceResponse
+  case object Failure extends OrderServiceResponse
 
   case class BrokerResponse(status: String)
 
@@ -44,6 +44,7 @@ class OrderService() extends Actor
 
   def receive = {
 
+    import OrderService._
     case req : ProductOrder =>
       log.info("Processing order")
       val currentSender = sender()

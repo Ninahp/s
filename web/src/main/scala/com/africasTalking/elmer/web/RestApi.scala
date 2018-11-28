@@ -59,6 +59,6 @@ trait ProductApi{
   lazy val orderer = createOrdererActor
 
   def getProduct(product : ProductOrder) = {
-    (orderer ? product).mapTo[Response]
+    (orderer ? product).mapTo[OrderServiceResponse]
   }
 }
