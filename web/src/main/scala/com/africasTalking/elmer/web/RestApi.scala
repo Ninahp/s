@@ -3,7 +3,7 @@ package web
 
 import scala.concurrent.ExecutionContext
 
-import akka.actor.{ ActorRef, ActorSystem, Props}
+import akka.actor.{ ActorRef, ActorSystem, Props }
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
@@ -14,10 +14,12 @@ import io.atlabs._
 import horus.core._
 import config.ATConfig
 
-import core.util.ElmerEnum.Status._
+import com.africasTalking._
 
-import worker.OrderService._
-import worker.{OrderService, ProductMarshaller}
+import elmer.core.util.ElmerEnum.Status._
+
+import elmer.worker.OrderService._
+import elmer.worker.{ OrderService, ProductMarshaller }
 
 
 class RestApi(implicit  system : ActorSystem ) extends Routes {
@@ -37,7 +39,7 @@ trait Routes extends ProductApi with ProductMarshaller {
 
   private def buy  = path("buy"){
     post {
-      entity(as[OrderServiceRequest]){ prod =>
+      entity(as[EtherOrderServiceRequest]){ prod =>
         onSuccess(getProduct(prod))  {
           case Accepted   =>  complete("Request Accepted")
           case Failure    =>  complete("Request Failed")
@@ -59,7 +61,7 @@ trait ProductApi{
 
   lazy val orderer = createOrdererActor
 
-  def getProduct(product : OrderServiceRequest) = {
+  def getProduct(product : EtherOrderServiceRequest) = {
     (orderer ? product).mapTo[Status]
   }
 }

@@ -9,7 +9,9 @@ import io.atlabs._
 
 import horus.core.util.{ ATLogT, ApplicationLifecycle }
 
-import core.ElmerConfig
+import com.africasTalking._
+
+import elmer.core.ElmerConfig
 
 class Application extends ApplicationLifecycle with ATLogT {
 

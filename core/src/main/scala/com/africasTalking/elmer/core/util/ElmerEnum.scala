@@ -2,7 +2,6 @@ package com.africasTalking.elmer.core.util
 
 object ElmerEnum {
 
-
   object Food extends Enumeration {
     val ughali = Value("Ughali")
     val rice = Value("Rice")

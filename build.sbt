@@ -35,7 +35,7 @@ val scalaTestVersion = "3.0.5"
 
 
 lazy val elmer = (project in file("."))
-  .aggregate(core, web)
+  .aggregate(core, web,worker)
 
 lazy val sharedDependencies = Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion      % Test,

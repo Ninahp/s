@@ -12,7 +12,7 @@ private[core] trait ElmerConfigTrait extends ATBaseConfigT {
 
   val port = config.getInt("elmer.interface.web.port")
 
-  val orderRequestUrl = config.getString("elmer.broker.order-request-url")
+  val EtherOrderGatewayUrl = config.getString("elmer.broker.order-request-url")
 
 }
 
