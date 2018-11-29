@@ -10,13 +10,19 @@ import akka.util.ByteString
 
 import org.scalatest.{ Matchers, WordSpec }
 
+import com.africasTalking._
+
+import elmer.core.util.ElmerCoreServiceT
+
 
 class WebServiceSpec extends WordSpec
   with ScalatestRouteTest
   with Matchers
-  with ElmerWebServiceT {
+  with ElmerWebServiceT
+  with ElmerCoreServiceT {
 
-  def actorRefFactory           = system
+  def actorRefFactory = system
+
   implicit val routeTestTimeout = RouteTestTimeout(FiniteDuration(10, "seconds"))
 
   def testRequest(name: String, quantity: Int):HttpRequest = {

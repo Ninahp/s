@@ -1,4 +1,4 @@
-## Food Odering Application
+## Food Ordering Application
 
 Should be able to:
 

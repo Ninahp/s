@@ -18,68 +18,84 @@ import elmer.core.util.ElmerEnum._
 
 import elmer.worker.gateway.FoodRequestGateway.{ FoodGatewayRequest, FoodGatewayResponse }
 import elmer.worker.gateway.FoodRequestGateway
-import elmer.worker.test.{ ElmerTestHttpEndpointT, WorkerTestService }
+import elmer.worker.gateway.GatewayJsonSupportT
+import elmer.worker.gateway._
+import elmer.worker.test.ElmerTestHttpEndpointT
 
 
-class FoodRequestGatewaySpec extends WorkerTestService
-  with ElmerTestHttpEndpointT
-  with GatewayJsonSupportT {
+class FoodRequestGatewaySpec extends ElmerTestHttpEndpointT with GatewayJsonSupportT {
 
-  val gatewayService  = system.actorOf(Props(new FoodRequestGateway{
-    override def sendHttpRequest(req : HttpRequest) = Future.successful(getStringHttpResponse(req))
-    override val gatewayUrl  = "http://at.foodservice.com/request"
+  val gatewayService   = system.actorOf(Props(new FoodRequestGateway{
+    override def sendHttpRequest(req : HttpRequest) =
+      Future.successful(getStringHttpResponse(req))
   }))
 
-  val validRequest    = FoodGatewayRequest(name = "PepperSoup", quantity = 12)
-  val invalidRequest  = FoodGatewayRequest(name = "Sauce", quantity = 0)
-
-  val validResponse   = FoodGatewayResponse(FoodOrderStatus.Accepted,"Request Accepted")
-  val invalidResponse = FoodGatewayResponse(FoodOrderStatus.BadRequest,"Content was malformed")
 
   "Food Request Gateway" must {
     "Send and receive a response from the broker when sent a valid Request" in {
-      gatewayService ! validRequest
-      expectMsg(validResponse)
+      gatewayService ! FoodGatewayRequest(
+        FoodEnum.Ugali,
+        12
+      )
+      expectMsg(FoodGatewayResponse(FoodOrderStatus.Accepted, "Request Accepted"))
     }
 
-    "Send and receive a failed response from the broker when sent an invalid Request" in {
-      gatewayService ! invalidRequest
-      expectMsg(invalidResponse)
+    "Send and receive an Invalid response from the broker when sent an invalid Request" in {
+      gatewayService ! FoodGatewayRequest(
+        FoodEnum.Invalid,
+        12
+      )
+      expectMsg(FoodGatewayResponse(FoodOrderStatus.BadRequest, "Error while sending request to the gateway"))
     }
+
+    "Send and receive a BadRequest from the broker when sent rice " in {
+      gatewayService ! FoodGatewayRequest(
+        FoodEnum.Rice,
+        12
+      )
+      expectMsg(FoodGatewayResponse(FoodOrderStatus.BadRequest, "Content was malformed"))
+    }
+
   }
 
   override def getStringHttpResponseImpl(
      data: String,
      uri:Uri
    ): ATHttpClientResponse = {
-      uri.toString match{
-        case "http://at.foodservice.com/request" =>
-          val request = data.parseJson.convertTo[GatewayRequest]
-          FoodEnum.contains(request.name) match{
-            case false =>
+          val request = data.parseJson.convertTo[etherGatewayRequest]
+          request.name match{
+            case FoodEnum.Ugali =>
               ATHttpClientResponse(
                 status = StatusCodes.OK,
-                data   = FoodGatewayResponse(
-                  FoodOrderStatus.BadRequest,
-                  "Error while sending request to the gateway"
+                data   = etherGatewayResponse(
+                  status = FoodOrderStatus.Accepted
                 ).toJson.compactPrint
               )
 
-            case true  =>
+            case FoodEnum.Rice  =>
               ATHttpClientResponse(
                 status = StatusCodes.OK,
-                data   = FoodGatewayResponse(
-                  FoodOrderStatus.Accepted,
-                  "Request Accepted"
+                data   = etherGatewayResponse(
+                  status = FoodOrderStatus.BadRequest
                 ).toJson.compactPrint
               )
+
+            case FoodEnum.Invalid =>
+              ATHttpClientResponse(
+                status = StatusCodes.BadRequest,
+                data   = etherGatewayResponse(
+                  status = FoodOrderStatus.InternalError
+                ).toJson.compactPrint
+              )
+
+            case _ =>
+              ATHttpClientResponse(
+                status = StatusCodes.Forbidden,
+                data   = etherGatewayResponse(
+                  status = FoodOrderStatus.InternalError
+                ).toJson.compactPrint
+              )
+
           }
-
-        case _=>
-          ATHttpClientResponse(
-            status = StatusCodes.NotFound,
-            data   = "The page you requested is not available"
-          )
-      }
   }
 }

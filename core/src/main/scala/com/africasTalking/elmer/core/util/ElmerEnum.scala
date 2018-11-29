@@ -4,14 +4,17 @@ package util
 object ElmerEnum {
 
   object FoodEnum extends Enumeration {
-    val Ugali      = Value(1)
-    val Rice       = Value(2)
-    val beefStew   = Value(3)
-    val beefFry    = Value(4)
-    val Egusi      = Value(5)
-    val PepperSoup = Value(6)
+    val Ugali      = Value(0)
+    val Rice       = Value(1)
+    val beefStew   = Value(2)
+    val beefFry    = Value(3)
+    val Egusi      = Value(4)
+    val PepperSoup = Value(5)
+    val Invalid    = Value(6)
 
     def contains(s:String) = values.exists(_.toString == s)
+
+    def isInvalid(v: Value) = v == Invalid
  }
 
   object FoodOrderStatus extends Enumeration {

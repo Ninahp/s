@@ -12,19 +12,21 @@ import horus.core.config.ATConfig
 
 import com.africasTalking._
 
-import elmer.core.util.ElmerEnum._
+import elmer.core.util.ElmerCoreServiceT
 
 import elmer.worker.FoodRequestService
 
 import elmer.web.marshalling.WebJsonImplicitsT
 
 
-trait ElmerWebServiceT extends WebJsonImplicitsT {
+trait ElmerWebServiceT extends WebJsonImplicitsT with ElmerCoreServiceT {
 
   import FoodRequestService._
 
   def actorRefFactory: ActorRefFactory
-  implicit val timeout   = Timeout(ATConfig.httpRequestTimeout)
+
+  override def snoopServiceName = "elmer-web"
+  implicit val timeout          = Timeout(ATConfig.httpRequestTimeout)
 
   private val foodRequestService = createFoodRequestService
   def createFoodRequestService          = actorRefFactory.actorOf(Props[FoodRequestService])
@@ -33,13 +35,7 @@ trait ElmerWebServiceT extends WebJsonImplicitsT {
     path("request") {
       post { entity(as[FoodServiceRequest]) {request =>
         complete{
-          FoodEnum.contains(request.name) match {
-            case true  =>
               (foodRequestService ? request).mapTo[FoodServiceResponse]
-
-            case false =>
-              FoodServiceResponse(FoodOrderStatus.BadRequest.toString, "Content was malformed")
-          }
         }
       }}
     }
