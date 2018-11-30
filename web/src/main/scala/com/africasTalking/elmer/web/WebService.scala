@@ -21,8 +21,6 @@ import elmer.web.marshalling.WebJsonImplicitsT
 
 trait ElmerWebServiceT extends WebJsonImplicitsT with ElmerCoreServiceT {
 
-  import FoodRequestService._
-
   def actorRefFactory: ActorRefFactory
 
   override def snoopServiceName = "elmer-web"
@@ -30,6 +28,8 @@ trait ElmerWebServiceT extends WebJsonImplicitsT with ElmerCoreServiceT {
 
   private val foodRequestService = createFoodRequestService
   def createFoodRequestService          = actorRefFactory.actorOf(Props[FoodRequestService])
+
+  import FoodRequestService._
 
   lazy val route = {
     path("request") {

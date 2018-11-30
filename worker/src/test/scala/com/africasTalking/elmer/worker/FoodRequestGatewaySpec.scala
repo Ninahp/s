@@ -16,8 +16,8 @@ import com.africasTalking._
 
 import elmer.core.util.ElmerEnum._
 
-import elmer.worker.gateway.FoodRequestGateway.{ FoodGatewayRequest, FoodGatewayResponse }
 import elmer.worker.gateway.FoodRequestGateway
+import elmer.worker.gateway.FoodRequestGateway._
 import elmer.worker.gateway.GatewayJsonSupportT
 import elmer.worker.gateway._
 import elmer.worker.test.ElmerTestHttpEndpointT
