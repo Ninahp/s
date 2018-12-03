@@ -36,9 +36,9 @@ class WebServiceSpec extends WordSpec
 
   "ElmerWebService" should {
     "return a Bad Request status when sent an invalid request" in{
-      testRequest("invalid",10) ~> Route.seal(route) ~> check {
+      testRequest("Invalid",10) ~> Route.seal(route) ~> check {
         status shouldEqual StatusCodes.OK
-        responseAs[String] shouldEqual """{"status":"BadRequest","description":"Content was malformed"}"""
+        responseAs[String] shouldEqual """{"status":"BadRequest","description":"Error while sending request to the gateway"}"""
       }
     }
 

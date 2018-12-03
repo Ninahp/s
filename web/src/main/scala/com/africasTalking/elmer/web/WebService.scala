@@ -33,11 +33,12 @@ trait ElmerWebServiceT extends WebJsonImplicitsT with ElmerCoreServiceT {
 
   lazy val route = {
     path("request") {
-      post { entity(as[FoodServiceRequest]) {request =>
-        complete{
-              (foodRequestService ? request).mapTo[FoodServiceResponse]
+      post { entity(as[FoodServiceRequest]) { request =>
+          complete {
+                (foodRequestService ? request).mapTo[FoodServiceResponse]
+          }
         }
-      }}
+      }
     }
   }
 }
