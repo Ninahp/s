@@ -1,5 +1,5 @@
 package com.africasTalking.elmer.food
-package marshalling
+package gateway.marshalling
 
 import akka.http.scaladsl.marshallers.sprayjson._
 
@@ -13,14 +13,15 @@ import com.africasTalking._
 
 import elmer.core.util._
 
-import elmer.food._
+import elmer.food.gateway._
 
 trait ElmerJsonSupportT extends SprayJsonSupport with DefaultJsonProtocol {
 
   import ATJsonProtocol._
-  import BrokerService._
+  import FoodOrderGateway._
   import ElmerJsonProtocol._
 
-  implicit val FoodOrderServiceResponseFormat       = jsonFormat1(FoodOrderServiceResponse)
-  implicit val FoodOrderServiceRequestFormat        = jsonFormat2(FoodOrderServiceRequest)
+  implicit val EtherOrderRequestFormat   = jsonFormat2(EtherOrderRequest)
+  implicit val EtherResponseFormat       = jsonFormat1(EtherResponse)
+
 }

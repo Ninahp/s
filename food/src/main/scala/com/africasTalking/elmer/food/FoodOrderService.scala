@@ -5,9 +5,7 @@ import scala.util.{ Success, Failure }
 
 import akka.actor.{ Actor, ActorSystem, ActorLogging}
 import akka.actor.Props
-import akka.http.scaladsl.model._
 import akka.pattern.ask
-import akka.stream.ActorMaterializer
 import akka.util.Timeout
 
 import spray.json._
@@ -20,35 +18,39 @@ import horus.core.util.ATCCPrinter
 
 import com.africasTalking._
 
-import elmer.core.config.ElmerConfig
-
-import elmer.food.marshalling._
-
-import BrokerService._
-
 import elmer.core.util.ElmerEnum._
+
+import elmer.food.gateway._
+
 
 object FoodOrderService {
   case class PlaceOrder(
-    order:FoodOrderServiceRequest
+    order:FoodOrderGatewayRequest
   )extends ATCCPrinter
 
-  case class PlaceOrderRequest(
-    order:FoodOrderServiceRequest
+  case class FoodOrderGatewayRequest(
+    name: String,
+    quantity: Int
   )extends ATCCPrinter
+
+  case class FoodOrderGatewayResponse(
+    status: OrderRequestStatus.Value,
+    description: String
+  )extends ATCCPrinter
+
 }
 
 class FoodOrderService extends Actor
     with ActorLogging
-    with ElmerJsonSupportT
     with SnoopErrorPublisherT {
 
-  implicit val system        = context.system
+  implicit val system           = context.system
 
-  private val brokerService  = system.actorOf(Props[BrokerService])
+  private val foodOrderGateway  = system.actorOf(Props[FoodOrderGateway])
 
-  implicit val timeout       = Timeout(ATConfig.httpRequestTimeout)
+  implicit val timeout          = Timeout(ATConfig.httpRequestTimeout)
 
+  import FoodOrderGateway._
   import FoodOrderService._
   import context.dispatcher
 
@@ -56,25 +58,24 @@ class FoodOrderService extends Actor
     case PlaceOrder(order) => 
       log.info("processing " + PlaceOrder)
       val currentSender = sender
-      val response = (brokerService ? PlaceOrderRequest(order))
+      val response = (foodOrderGateway ? EtherOrderRequest(
+              quantity = order.quantity,
+              name     = order.name
+    )).mapTo[EtherOrderResponse]
 
       response onComplete {
         case Success(response) =>
-            try {
-              val brokerResponse = response.asInstanceOf[FoodOrderServiceResponse]
-              currentSender ! brokerResponse
-            } catch {
-              case ex: Throwable =>
-                publishError(s"Error while processing broker response [$response] for request [$order]", Some(ex))
-            currentSender ! FoodOrderServiceResponse(
-              status          = Status.Failure
-            ) 
-                           }
+            currentSender ! FoodOrderGatewayResponse(
+              status      = response.status,
+              description = response.description
+          )
         case Failure(error) =>
-          publishError(s"$error")
-            currentSender ! FoodOrderServiceResponse(
-              status          = Status.Failure
+          publishError(s"Failure to retrieve response from broker $error")
+            currentSender ! FoodOrderGatewayResponse(
+              status      = OrderRequestStatus.Failure,
+              description = "Failure to retrieve response from broker"
             ) 
+
       }
   }
 }
