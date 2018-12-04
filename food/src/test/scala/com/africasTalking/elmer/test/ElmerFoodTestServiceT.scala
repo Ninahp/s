@@ -1,5 +1,4 @@
-package com.africasTalking.elmer.food
-package test
+package com.africasTalking.elmer.test
 
 import akka.actor.ActorSystem
 
@@ -13,11 +12,9 @@ import com.africasTalking._
 
 import elmer.core.util.ElmerCoreServiceT
 
-import BrokerService._
+import elmer.food._
 
 import FoodOrderService._
-
-import elmer.food.marshalling._
 
 
 abstract class ElmerFoodTestServiceT extends TestKit(ActorSystem("MyTestSystem"))
@@ -30,12 +27,12 @@ abstract class ElmerFoodTestServiceT extends TestKit(ActorSystem("MyTestSystem")
   override def snoopServiceName = "TestService"
   override def actorRefFactory  = system
 
-  val validOrder = FoodOrderServiceRequest(
+  val validOrder = FoodOrderGatewayRequest(
     quantity = 2,
     name     = "Ugali"
   )
 
-  val invalidOrder = FoodOrderServiceRequest(
+  val invalidOrder = FoodOrderGatewayRequest(
     quantity = 2,
     name     = ""
   )
