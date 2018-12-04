@@ -18,8 +18,6 @@ import com.africasTalking._
 
 import elmer.food._
 
-import BrokerService._
-
 import FoodOrderService._
 
 import elmer.web.marshalling._
@@ -39,7 +37,7 @@ class WebServiceSpec extends WordSpec
   
   "ElmerWebService" should {
     "be able to add food orders (POST /food/order)" in {
-      val order = FoodOrderServiceRequest(
+      val order = FoodOrderGatewayRequest(
 		    quantity = 2,
 		    name     = "Ugali"
 		)

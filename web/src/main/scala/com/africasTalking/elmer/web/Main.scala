@@ -34,8 +34,8 @@ class Application extends ApplicationLifecycle {
         new WebServiceT {
           override def actorRefFactory = actorSystem
         }.route,
-        ElmerConfig.apiInterface,
-        ElmerConfig.apiPort
+        ElmerConfig.webHost,
+        ElmerConfig.WebPort
       )
 
       started = true

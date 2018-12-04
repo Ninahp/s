@@ -18,14 +18,13 @@ import elmer.food._
 trait ElmerJsonSupportT extends SprayJsonSupport with DefaultJsonProtocol {
 
   import ATJsonProtocol._
-  import BrokerService._
-  import ElmerJsonProtocol._
   import FoodOrderService._
+  import ElmerJsonProtocol._
 
-  implicit val FoodOrderServiceResponseFormat       = jsonFormat1(FoodOrderServiceResponse)
-  implicit val FoodOrderServiceRequestFormat        = jsonFormat2(FoodOrderServiceRequest)
+  implicit val FoodOrderGatewayResponseFormat       = jsonFormat2(FoodOrderGatewayResponse)
+  implicit val FoodOrderGatewayRequestFormat        = jsonFormat2(FoodOrderGatewayRequest)
 
-  def write(foodorder: FoodOrderServiceRequest): JsValue = {
+  def write(foodorder: FoodOrderGatewayRequest): JsValue = {
     JsObject(
       "name"     -> foodorder.name.toJson,
       "quantity" -> foodorder.quantity.toJson

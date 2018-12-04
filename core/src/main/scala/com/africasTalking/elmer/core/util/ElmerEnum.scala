@@ -3,7 +3,7 @@ package util
 
 object ElmerEnum {
 
-  object Status extends Enumeration {
+  object OrderRequestStatus extends Enumeration {
     val Accepted          = Value(1)
     val Delivered         = Value(2)
     val Failure           = Value(3)
