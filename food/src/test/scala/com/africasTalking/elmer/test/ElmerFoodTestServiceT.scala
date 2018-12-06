@@ -12,6 +12,8 @@ import com.africasTalking._
 
 import elmer.core.util.ElmerCoreServiceT
 
+import elmer.core.util.ElmerJsonProtocol._
+
 import elmer.food._
 
 import FoodOrderService._
@@ -27,15 +29,6 @@ abstract class ElmerFoodTestServiceT extends TestKit(ActorSystem("MyTestSystem")
   override def snoopServiceName = "TestService"
   override def actorRefFactory  = system
 
-  val validOrder = FoodOrderGatewayRequest(
-    quantity = 2,
-    name     = "Ugali"
-  )
-
-  val invalidOrder = FoodOrderGatewayRequest(
-    quantity = 2,
-    name     = ""
-  )
   override def beforeAll {
     Thread.sleep(1000)
   }

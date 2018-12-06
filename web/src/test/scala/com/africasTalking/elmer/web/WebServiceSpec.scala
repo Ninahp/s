@@ -16,10 +16,7 @@ import org.scalatest.{ Matchers, WordSpec }
 
 import com.africasTalking._
 
-import elmer.food._
-
-import FoodOrderService._
-
+import elmer.food.FoodOrderService._
 import elmer.web.marshalling._
 
 class WebServiceSpec extends WordSpec 
@@ -37,12 +34,11 @@ class WebServiceSpec extends WordSpec
   
   "ElmerWebService" should {
     "be able to add food orders (POST /food/order)" in {
-      val order = FoodOrderGatewayRequest(
-		    quantity = 2,
-		    name     = "Ugali"
-		)
-      val orderJson   = write(order)
-      val request     = Post("/food/order", orderJson)
+      val order = JsObject(
+        "name"     -> "Ugali".toJson,
+        "quantity" -> 2.toJson
+      )
+      val request     = Post("/food/order", order)
       request ~> routes ~> check {
         status should ===(StatusCodes.OK)
         contentType should ===(ContentTypes.`application/json`)

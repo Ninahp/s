@@ -35,9 +35,9 @@ trait WebServiceT extends ElmerJsonSupportT
   lazy val route = {
     path("food" / "order") {
         post {
-          entity(as[FoodOrderGatewayRequest]) { order =>
-                complete((foodOrderService ? PlaceOrder(order)
-            ).mapTo[FoodOrderGatewayResponse])
+          entity(as[FoodOrderServiceRequest]) { order =>
+                complete((foodOrderService ? order
+            ).mapTo[FoodOrderServiceResponse])
           }
         }
       }

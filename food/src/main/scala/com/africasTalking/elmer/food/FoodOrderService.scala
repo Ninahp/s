@@ -18,22 +18,18 @@ import horus.core.util.ATCCPrinter
 
 import com.africasTalking._
 
-import elmer.core.util.ElmerEnum._
+import elmer.core.util.ElmerEnum.{ FoodName, OrderRequestStatus }
 
 import elmer.food.gateway._
 
 
 object FoodOrderService {
-  case class PlaceOrder(
-    order:FoodOrderGatewayRequest
-  )extends ATCCPrinter
-
-  case class FoodOrderGatewayRequest(
-    name: String,
+  case class FoodOrderServiceRequest(
+    name: FoodName.Value,
     quantity: Int
   )extends ATCCPrinter
 
-  case class FoodOrderGatewayResponse(
+  case class FoodOrderServiceResponse(
     status: OrderRequestStatus.Value,
     description: String
   )extends ATCCPrinter
@@ -55,25 +51,25 @@ class FoodOrderService extends Actor
   import context.dispatcher
 
   def receive: Receive = {
-    case PlaceOrder(order) => 
-      log.info("processing " + PlaceOrder)
+    case order: FoodOrderServiceRequest => 
+      log.info("processing " + FoodOrderServiceRequest)
       val currentSender = sender
-      val response = (foodOrderGateway ? EtherOrderRequest(
+      val response = (foodOrderGateway ? FoodOrderGatewayRequest(
               quantity = order.quantity,
               name     = order.name
-    )).mapTo[EtherOrderResponse]
+    )).mapTo[FoodOrderGatewayResponse]
 
       response onComplete {
         case Success(response) =>
-            currentSender ! FoodOrderGatewayResponse(
+            currentSender ! FoodOrderServiceResponse(
               status      = response.status,
               description = response.description
           )
         case Failure(error) =>
-          publishError(s"Failure to retrieve response from broker $error")
-            currentSender ! FoodOrderGatewayResponse(
-              status      = OrderRequestStatus.Failure,
-              description = "Failure to retrieve response from broker"
+          publishError(s"Failed to retrieve response from broker for [$order]", Some(error))
+            currentSender ! FoodOrderServiceResponse(
+              status      = OrderRequestStatus.Failed,
+              description = "Error while processing request"
             ) 
 
       }

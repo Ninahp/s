@@ -12,7 +12,7 @@ import com.africasTalking._
 
 import elmer.core.config._
 
-import elmer.core.util.ElmerEnum._
+import elmer.core.util.ElmerEnum.{ FoodName, OrderRequestStatus }
 
 import elmer.food.gateway._
 
@@ -23,24 +23,24 @@ import FoodOrderGateway._
 class FoodOrderGatewaySpec extends ElmerFoodTestServiceT {
   val foodOrderGateway 		  = system.actorOf(Props(new FoodOrderGateway))
   "The FoodOrderGateway" must {
-    "reject an order request lacking a valid food order name" in {
-      foodOrderGateway ! EtherOrderRequest(
-        name     = invalidOrder.name,
-        quantity = invalidOrder.quantity
+    "process a valid order request and return a FoodOrderGatewayResponse" in {
+      foodOrderGateway ! FoodOrderGatewayRequest(
+        name     = FoodName.NaN,
+        quantity = 3
       )
-      expectMsg(FiniteDuration(20, "seconds"), EtherOrderResponse(
-        status       = OrderRequestStatus.Failure,
+      expectMsg(FiniteDuration(20, "seconds"), FoodOrderGatewayResponse(
+        status       = OrderRequestStatus.Failed,
         description  = "The request content was malformed:\nObject is missing required member 'name'"
       ))
     }
   	"process a valid order request" in {
-      foodOrderGateway ! EtherOrderRequest(
-        name     = validOrder.name,
-        quantity = validOrder.quantity
+      foodOrderGateway ! FoodOrderGatewayRequest(
+        name     = FoodName.Ugali,
+        quantity = 3
       )
-      expectMsg(FiniteDuration(20, "seconds"), EtherOrderResponse(
+      expectMsg(FiniteDuration(20, "seconds"), FoodOrderGatewayResponse(
         status       = OrderRequestStatus.Accepted,
-       description   = "Successfully processed the response" 
+       description   = "request Accepted" 
       ))
     }
   }

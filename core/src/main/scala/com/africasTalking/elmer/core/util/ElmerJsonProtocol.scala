@@ -16,4 +16,12 @@ object ElmerJsonProtocol extends DefaultJsonProtocol {
       case _ => throw new DeserializationException("Enum string expected")
     }
   }
+
+  implicit object FoodNameJsonFormat extends RootJsonFormat[FoodName.Value] {
+    def write(obj: FoodName.Value): JsValue = JsString(obj.toString)
+    def read(json: JsValue): FoodName.Value = json match {
+      case JsString(str) => FoodName.withName(str)
+      case _ => throw new DeserializationException("Enum string expected")
+    }
+  }
 }

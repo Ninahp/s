@@ -18,25 +18,20 @@ import horus.core.util.ATCCPrinter
 import com.africasTalking._
 
 import elmer.core.config.ElmerConfig
+import elmer.core.util.ElmerEnum.{ FoodName, OrderRequestStatus }
 
-import elmer.core.util.ElmerEnum._
-
-import elmer.food.gateway.marshalling._ 
+import marshalling._
 
 
 object FoodOrderGateway{
-  case class EtherOrderRequest(
-    quantity: Int,
-    name: String
+  case class FoodOrderGatewayRequest(
+    name: FoodName.Value,
+    quantity: Int
   )extends ATCCPrinter
 
-  case class EtherOrderResponse(
+  case class FoodOrderGatewayResponse(
     status: OrderRequestStatus.Value,
     description: String
-  )extends ATCCPrinter
-
-  case class EtherResponse(
-    status: OrderRequestStatus.Value
   )extends ATCCPrinter
 }
 
@@ -54,11 +49,15 @@ class FoodOrderGateway extends Actor
   import context.dispatcher
 
   def receive: Receive = {
-    case req: EtherOrderRequest => 
+    case req: FoodOrderGatewayRequest => 
       log.info("processing " + EtherOrderRequest)
       val currentSender = sender
+      val etherOrderRequest = EtherOrderRequest(
+        name      = req.name,
+        quantity  = req.quantity
+      )
       val requestFut  = for {
-        entity   <- Marshal(req).to[MessageEntity]
+        entity   <- Marshal(etherOrderRequest).to[MessageEntity]
         response <- sendHttpRequest(
           HttpRequest(
             method = HttpMethods.POST,
@@ -70,41 +69,40 @@ class FoodOrderGateway extends Actor
 
       requestFut onComplete {
         case Success(response) =>
-          log.info(response.status.toString)
           response.status.isSuccess match {
             case true =>
               try {
-                val etherResponse = response.data.parseJson.convertTo[EtherResponse]
-                currentSender ! EtherOrderResponse(
+                val etherResponse = response.data.parseJson.convertTo[EtherOrderResponse]
+                currentSender ! FoodOrderGatewayResponse(
                   status      = etherResponse.status,
-                  description = "Successfully processed the response"
+                  description = "request " + etherResponse.status
                 )
               } catch {
                 case ex: DeserializationException =>
                   publishError(s"Error while parsing json response [$response]", Some(ex))
-              currentSender ! EtherOrderResponse(
-                status          = OrderRequestStatus.Failure,
-                description     = "Couldn't parse json response"
-              )
+                    currentSender ! FoodOrderGatewayResponse(
+                      status          = OrderRequestStatus.Failed,
+                      description     = "Service couldn't process the response"
+                    )
                 case ex: Throwable =>
                   publishError(s"Got an unexpected error on response [$response]", Some(ex))
-              currentSender ! EtherOrderResponse(
-                status          = OrderRequestStatus.Failure,
-                description     = "Unexpected error"
-              )            }
+                    currentSender ! FoodOrderGatewayResponse(
+                      status          = OrderRequestStatus.Failed,
+                      description     = "Unexpected error"
+                    )            }
             case false =>
               publishError("Unexpected response " + response + " for request " + req)
-              currentSender ! EtherOrderResponse(
-              status          = OrderRequestStatus.Failure,
-              description     = response.data
-            )
+                currentSender ! FoodOrderGatewayResponse(
+                status          = OrderRequestStatus.Failed,
+                description     = response.data
+              )
           }
         case Failure(error) =>
           publishError(s"$error")
-          currentSender ! EtherOrderResponse(
-              status          = OrderRequestStatus.Failure,
-              description     = "Failure getting response from gateway"
-        )
+            currentSender ! FoodOrderGatewayResponse(
+                status          = OrderRequestStatus.Failed,
+                description     = "Failed getting response from gateway"
+          )
       }
   }
 }
