@@ -27,7 +27,7 @@ trait ElmerWebServiceT extends WebJsonImplicitsT {
     path("request") {
       get{parameters('name.as[String], 'quantity.as[Int]) { (name, qty) =>
         complete{
-          (foodRequestService ? FoodServiceRequest(name, qty)).mapTo[IncomingFoodServiceResponse]
+          (foodRequestService ? FoodServiceRequest(name, qty)).mapTo[InboundFoodServiceResponse]
         }
       }}
     }

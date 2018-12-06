@@ -15,25 +15,25 @@ lazy val sharedDependencies = Seq(
 
 
 
-lazy val core = (project in file("core")).
-  settings(
-    sharedSettings,
+lazy val core = (project in file("core"))
+  .settings(
     libraryDependencies ++= sharedDependencies,
-    libraryDependencies Seq(
+    libraryDependencies ++= Seq(
       "com.typesafe.akka"         %% "akka-actor"             % akkaVersion,
       "com.typesafe.akka"         %% "akka-http"              % akkaHttpVersion,
       "com.typesafe.akka"         %% "akka-slf4j"             % akkaVersion,
       "com.typesafe.akka"         %% "akka-http-spray-json"   % "10.1.5",
-      "com.typesafe.slick"        %% "slick"                  % "1.0.1",
+      //"com.typesafe.slick"        %% "slick"                  % "1.0.1",
       "ch.qos.logback"            %  "logback-core"           % "1.2.1",
       "ch.qos.logback"            % "logback-classic"         % "1.2.3",
       "io.spray"                  %% "spray-json"             % "1.3.3",
-      "io.spray"                  % "spray-routing"           % "1.1-M8",
+      //"io.spray"                  % "spray-routing"           % "1.1-M8",
     //"mysql"                     % "mysql-connector-java"    % "5.1.25",
-      "net.liftweb"               %% "lift-json"              % "2.5.1",
+     // "net.liftweb"               %% "lift-json"              % "2.5.1",
       "io.atlabs"                 %% "horus-core"             % "0.1.6"
 
-)
+    )
+  )
 
 resolvers ++= Seq(
   ATSnapshots,

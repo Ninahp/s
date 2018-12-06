@@ -13,7 +13,7 @@ class RequestGatewaySpec extends TestKit(ActorSystem(""))
   with ImplicitSender
 {
 
-  val gatewayService  = system.actorOf(Props[RequestGateway])
+  val gatewayService         = system.actorOf(Props[RequestGateway])
 
   val correctOrderRequest    = InboundRequest(name = "Pilau", quantity = 1)
   val wrongOrderRequest      = InboundRequest(name = "Salad", quantity = 0)
